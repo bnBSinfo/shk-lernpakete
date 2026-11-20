@@ -82,6 +82,11 @@ var HY = (function () {
   return { ARTEN: ARTEN, HEIZ: HEIZ, WEG: WEG, DP_WEG: DP_WEG, kreise: kreise, kv: kv, solltemp: solltemp, heizlast: heizlast, spreizung: spreizung, vsoll: vsoll, rechne: rechne, automatik: automatik, noetigePumpe: noetigePumpe, begrenze: begrenze };
 })();
 
+/* ---------- Satzanfänge (P16) – als HTML in Mitdenken- und Reflexionstexten ---------- */
+function SATZ(liste, einfach) {
+  return '<div class="st-satz"><b>' + (einfach ? 'So kannst du anfangen:' : 'Satzanfänge, wenn du sie brauchst:') + '</b><ul>' + liste.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul></div>';
+}
+
 /* ---------- Häuser ---------- */
 function raum(art, flaeche, heiz, thermo, name) { return { art: art, flaeche: flaeche, heiz: heiz, thermo: thermo == null ? (art === 'bad' ? 4 : art === 'flur' ? 2 : 3) : thermo, vor: 7, name: name || null }; }
 function hausYilmaz() {
@@ -462,7 +467,8 @@ function hausSimulator(box, api, o) {
   var sim = {
     haus: function () { return haus; }, zeichne: zeichne, sag: sag, pruefe: pruefe, auswertung: auswertung, protokollHtml: protokollHtml,
     modus: function (m) { if (m) { modus = m; zeichne(); } return modus; },
-    hinweis: function (html, ausdruck) { hinweis.innerHTML = ''; hinweis.appendChild(E('div', { class: 'hy-fig', html: KIT.figur(PAKET.figur.aussehen, { ausdruck: ausdruck || 'froh' }) })); hinweis.appendChild(E('p', { html: html })); },
+    hinweis: function (html, ausdruck) { hinweis.innerHTML = ''; hinweis.appendChild(E('div', { class: 'hy-fig', html: KIT.figur(PAKET.figur.aussehen, { ausdruck: ausdruck || 'froh' }) })); hinweis.appendChild(typeof html === 'string' ? E('p', { html: html }) : html); },
+    wahl: function (i) { wahl = i; bauenOffen = false; zeichne(); },
     bekannt: function () { return profiBekannt; },
     profiAlle: function () { haus.plaetze.forEach(function (r, i) { if (r) profiBekannt[i] = true; }); zeichne(); }
   };
@@ -531,23 +537,72 @@ function abgleichSpiel(box, api) {
     }).concat([
       E('button', { type: 'button', 'aria-pressed': String(ansicht === 'frei'), text: L('🏗️ Eigenes Haus planen', '🏗️ Eigenes Haus'), onclick: function () { ansicht = 'frei'; start(); } }),
       ansicht !== 'frei' ? E('button', { type: 'button', text: L('↺ Auftrag neu', '↺ Neu'), onclick: function () { api.speicher('h' + (ansicht + 1), ''); haeuser[ansicht] = null; start(); } }) : null])));
-    STUFEN.pfadwahl(k, { text: L('Profi: Den Soll-Volumenstrom jedes Raums rechnest du selbst aus.', 'Profi: Du rechnest das Soll selbst.') });
+    var e = api.speicher('e'), name = e === 'profi' ? '🚀 Profi' : '⛰️ Basis';
+    STUFEN.pfadwahl(k, { text: e ? L('Empfehlung nach deiner Einstufung: ' + name + '. Im Profi-Weg berechnest du den Soll-Volumenstrom jedes Raums selbst. Du kannst jederzeit wechseln.', 'Wir empfehlen: ' + name + '. Profi: Du rechnest das Soll selbst. Du kannst wechseln.')
+      : L('Profi: Den Soll-Volumenstrom jedes Raums rechnest du selbst aus. Du kannst jederzeit wechseln.', 'Profi: Du rechnest das Soll selbst. Du kannst wechseln.') });
     return k;
   }
+  function einstufen() {
+    box.innerHTML = '';
+    var w = E('div', { class: 'hy', style: { maxWidth: '760px' } });
+    var kopfzeile = E('div', { class: 'hy-hinweis' }, [E('div', { class: 'hy-fig', html: KIT.figur(PAKET.figur.aussehen, { ausdruck: 'froh' }) }),
+      E('p', { html: L('Bevor wir zu Familie Yilmaz fahren: <b>Beantworte</b> zwei kurze Fragen. Danach schlage ich dir einen Weg vor – ⛰️ Basis oder 🚀 Profi.', 'Vor der Fahrt: <b>Beantworte</b> 2 kurze Fragen. Dann schlage ich dir einen Weg vor.') })]);
+    w.appendChild(kopfzeile);
+    STUFEN.einstufung(w, { aufgaben: [
+      { frage: L('Ein Raum bekommt zu wenig Heizwasser. Drehst du die Voreinstellung <b>größer</b> oder <b>kleiner</b>?', 'Ein Raum bekommt zu wenig Wasser. Drehst du die Voreinstellung <b>größer</b> oder <b>kleiner</b>?'), pruefe: function (a) { return /gr(ö|oe|o)(ß|ss|s)/i.test(a); } },
+      { frage: L('Heizlast 1160 W, Heizkörper 55/45 °C: Wie groß ist der Soll-Volumenstrom in l/h?', 'Heizlast 1160 W. Heizkörper 55/45 °C. Wie viel Wasser in l/h?'), pruefe: function (a) { var x = parseFloat(String(a).replace(',', '.')); return Math.abs(x - 100) <= 3; } }],
+      weiter: function (stufe) { api.speicher('e', stufe); start(); } });
+    w.querySelectorAll('.primaer').forEach(function (k) { k.classList.remove('primaer'); });   // nur „Weiter“ unten ist hervorgehoben
+    w.appendChild(E('button', { type: 'button', text: L('Ohne Einstufung mit ⛰️ Basis starten', 'Ohne Fragen starten (Basis)'), onclick: function () { STUFEN.setzePfad('basis', false); api.speicher('e', 'basis'); start(); } }));
+    box.appendChild(w);
+  }
+  var DEMO = {
+    1: { start: L('Ich zeige dir den ersten Schritt, dann machst du weiter.', 'Ich zeige dir den 1. Schritt. Dann machst du weiter.'),
+      tun: function (s) { var h = s.haus(); h.pumpe = Math.max(1, h.pumpe - 0.5); s.modus('messung'); var a = s.auswertung(), w = a.zeilen.slice().sort(function (x, y) { return (y.r.vor - x.r.vor) || (y.i - x.i); })[0];   // ungünstigster Raum: offenstes Ventil, weitester Weg
+        return L('Ich habe die Pumpe auf <b>' + hyZahl(h.pumpe, 1) + ' m</b> gedreht und auf 🔧 Messung geschaltet. Alle Räume bekommen etwas weniger. Der ungünstigste Raum, <b>' + KIT.esc(hyName(w.r)) + '</b>, hat noch <b>' + hyZahl(w.m.x * 100) + ' %</b> – also darf ich weiter herunter. Die Pumpe braucht jetzt ≈ ' + a.watt + ' W.',
+          'Pumpe jetzt <b>' + hyZahl(h.pumpe, 1) + ' m</b>. Der Raum mit dem wenigsten Wasser: <b>' + KIT.esc(hyName(w.r)) + '</b> mit ' + hyZahl(w.m.x * 100) + ' %. Das reicht noch. Ich darf weiter runter.'); },
+      frage: L('Warum schaue ich beim Herunterdrehen nur auf den <b>ungünstigsten</b> Raum?', 'Warum schaue ich nur auf den Raum mit dem <b>wenigsten</b> Wasser?'),
+      antwort: L('Wenn der ungünstigste Raum noch 90 % bekommt, bekommen alle anderen sicher genug – sie sind ja auf diese Förderhöhe gedrosselt. Fällt er unter 90 %, war ich einen Schritt zu weit.', 'Bekommt er genug, bekommen alle genug. Fällt er unter 90 %, war es zu weit.'),
+      weiter: L('Jetzt du: <b>Dreh</b> die Pumpe weiter herunter, bis der ungünstigste Raum gerade noch 90 % hat. <b>Stelle</b> die Räume über 110 % nach. Dann <b>prüfe</b> mit 📋.', 'Jetzt du: <b>Dreh</b> die Pumpe weiter runter. Der Raum hinten braucht 90 %. Dann <b>prüfe</b> mit 📋.') },
+    2: { start: L('Ich zeige dir zuerst, wie du einen Raum mit Fußbodenheizung abliest.', 'Ich zeige dir: So liest du die Fußbodenheizung ab.'),
+      tun: function (s) { var h = s.haus(), r = h.plaetze[0], n = HY.kreise(r), v = HY.vsoll(r); s.modus('messung'); s.wahl(0);
+        return L('Das <b>Wohnzimmer</b> hat ' + r.flaeche + ' m² Fußbodenheizung, also <b>' + n + ' Heizkreise</b> am Verteiler. Soll: ' + HY.heizlast(r) + ' W / (1,163 · 5 K) = <b>' + hyZahl(v) + ' l/h</b>. Je Kreis: ' + hyZahl(v / n) + ' l/h = <b>' + hyZahl(v / n / 60, 2) + ' l/min</b> – das soll jeder Durchflussmesser zeigen.',
+          'Das <b>Wohnzimmer</b> hat <b>' + n + ' Kreise</b>. Soll: <b>' + hyZahl(v) + ' l/h</b>. Je Kreis: <b>' + hyZahl(v / n / 60, 2) + ' l/min</b>.'); },
+      frage: L('Warum braucht das Wohnzimmer mit Fußbodenheizung viel mehr Wasser als das Schlafzimmer oben mit Heizkörper?', 'Warum braucht das Wohnzimmer viel mehr Wasser als das Schlafzimmer?'),
+      antwort: L('Die Fußbodenheizung hat nur 5 K Spreizung (35/30 °C), der Heizkörper 10 K (55/45 °C). Jeder Liter bringt nur halb so viel Wärme – dazu ist das Wohnzimmer doppelt so groß.', 'Die FBH hat nur 5 K. Der Heizkörper hat 10 K. Und das Wohnzimmer ist größer.'),
+      weiter: L('Jetzt du: 1. <b>Gleiche</b> alle Räume auf 90–110 % ab. 2. <b>Stelle</b> die Pumpe sparsam ein. 3. <b>Prüfe</b> mit 📋.', 'Jetzt du: <b>Gleiche</b> alle Räume ab. <b>Stelle</b> die Pumpe sparsam ein. <b>Prüfe</b> mit 📋.') }
+  };
+  function demoHinweis(n) {
+    var D = DEMO[n], w = E('div', {});
+    w.appendChild(E('p', { html: D.start }));
+    w.appendChild(E('div', { class: 'hy-regel', style: { display: 'flex', gap: '6px', flexWrap: 'wrap' } }, [
+      E('button', { type: 'button', text: L('▶ Zeig’s mir', '▶ Zeig es mir'), onclick: function () {
+        var text = D.tun(sim), ant = E('div', { 'aria-live': 'polite' }), x = E('div', {});
+        x.appendChild(E('p', { html: text }));
+        x.appendChild(E('p', { html: '🤔 <b>' + L('Erkläre dir selbst:', 'Überleg kurz:') + '</b> ' + D.frage }));
+        x.appendChild(E('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap' } }, [
+          E('button', { type: 'button', text: L('Begründung zeigen', 'Antwort zeigen'), onclick: function () { ant.innerHTML = '<div class="muster"><b>' + L('Begründung:', 'Antwort:') + '</b> ' + D.antwort + '</div>'; } }),
+          E('button', { type: 'button', text: L('Jetzt ich →', 'Jetzt ich →'), onclick: function () { api.speicher('d' + n, 1); zeigeTut(); } })]));
+        x.appendChild(ant);
+        sim.hinweis(x, 'froh'); } }),
+      E('button', { type: 'button', text: L('Selbst probieren', 'Selbst probieren'), onclick: function () { api.speicher('d' + n, 1); zeigeTut(); } })]));
+    return w;
+  }
   var TUT = [
-    function () { return L('Herr Yilmaz am Telefon: <b>„Das Kinderzimmer von Can oben wird einfach nicht warm!“</b> Tippe das Kinderzimmer Can an.', 'Herr Yilmaz sagt: <b>„Das Zimmer von Can wird nicht warm.“</b> Tippe auf das Zimmer von Can.'); },
-    function () { return L('Dreh das Thermostat bei Can auf <b>5</b> (+). Schau auf Temperatur und Ventilhub.', 'Dreh das Thermostat auf <b>5</b> (+). Schau auf die Temperatur.'); },
-    function () { return L('Kaum Wirkung! Das Ventil war schon <b>ganz offen</b>. Es kommt einfach nicht genug Wasser an. Schalte oben auf <b>🔧 Messung: Köpfe ab</b> – so misst du für den Abgleich.', 'Es wird nicht wärmer. Das Ventil war schon ganz offen. Tippe oben auf <b>🔧 Messen: Köpfe ab</b>.'); },
-    function () { return L('🟥 = zu wenig, 🟧 = zu viel Wasser. Die nahen Räume nehmen sich das Wasser. <b>Drossle sie mit der Voreinstellung (−).</b> Reicht es oben dann nicht, stell die Pumpe etwas höher. Ziel: alle Räume grün, dann <b>📋 Abgleich prüfen</b>.', '🟥 = zu wenig. 🟧 = zu viel. <b>Drossle</b> die 🟧-Räume mit der Voreinstellung (−). Dann <b>📋 Prüfen</b>.'); }
+    function () { return L('Herr Yilmaz am Telefon: „Das Kinderzimmer von Can oben wird einfach nicht warm!“ <b>Tippe</b> das Kinderzimmer Can an.', 'Herr Yilmaz sagt: „Das Zimmer von Can wird nicht warm.“ <b>Tippe</b> auf das Zimmer von Can.'); },
+    function () { return L('1. <b>Dreh</b> das Thermostat bei Can auf 5 (weißer Knopf, +). 2. <b>Beobachte</b> Temperatur und Ventilhub.', '1. <b>Dreh</b> das Thermostat auf 5 (+). 2. <b>Schau</b> auf die Temperatur.'); },
+    function () { return L('Kaum Wirkung! Das Ventil war schon <b>ganz offen</b>. Es kommt einfach nicht genug Wasser an. <b>Schalte</b> oben auf 🔧 Messung: Köpfe ab – so misst du für den Abgleich.', 'Es wird nicht wärmer. Das Ventil war schon ganz offen. <b>Tippe</b> oben auf 🔧 Messen: Köpfe ab.'); },
+    function () { return L('🟥 = zu wenig, 🟧 = zu viel Wasser. Die nahen Räume nehmen sich das Wasser. 1. <b>Drossle</b> die Räume mit zu viel Wasser am gelben Ring (−). 2. <b>Erhöhe</b> die Pumpe etwas, wenn oben dann noch Wasser fehlt. 3. <b>Prüfe</b> mit 📋 Abgleich prüfen.', '🟥 = zu wenig. 🟧 = zu viel. 1. <b>Drossle</b> die 🟧-Räume am gelben Ring (−). 2. <b>Prüfe</b> mit 📋.'); }
   ];
   function zeigeTut() {
     if (!sim) return;
     if (ansicht === 'frei') { sim.hinweis(L('Plane dein eigenes Haus: Tippe auf einen Platz, wähle Raumart, Fläche und Heizfläche. Je weiter hinten im OG, desto länger der Leitungsweg. Dann gleich ab!', 'Plane ein Haus. Tippe auf einen Platz. Wähle Raum und Heizung. Dann gleich ab.'), 'froh'); return; }
     var lv = LEVEL[ansicht];
     if (api.geschafft(lv.id)) { sim.hinweis(lv.nr < 3 ? L('✔ Geschafft! Weiter mit Auftrag ' + (lv.nr + 1) + ' oben.', '✔ Geschafft! Weiter mit Auftrag ' + (lv.nr + 1) + '.') : L('✔ Alle drei Aufträge geschafft. Probier im <b>eigenen Haus</b> aus, was du willst – oder geh unten weiter.', '✔ Alles geschafft! Plane ein <b>eigenes Haus</b> oder geh weiter.'), 'froh'); return; }
-    if (ansicht === 0) { if (tut < TUT.length) sim.hinweis(TUT[tut](), tut === 2 ? 'nachdenklich' : 'froh'); else sim.hinweis(L('Ziel: In der Messung bekommen <b>alle Räume 90–110 %</b> ihres Soll-Volumenstroms. Dann <b>📋 Abgleich prüfen</b>.', 'Ziel: Alle Räume <b>grün</b> (90 bis 110 %). Dann <b>📋 Prüfen</b>.'), 'froh'); }
-    else if (ansicht === 1) sim.hinweis(L('Herr Yilmaz hat die Pumpe „zur Sicherheit“ auf <b>5 m</b> gedreht. Jetzt bekommt jeder Raum zu viel Wasser, die Pumpe braucht unnötig Strom und es drohen Geräusche. Stell die Pumpe so <b>niedrig</b> wie möglich ein – der ungünstigste Raum muss aber noch 90 % bekommen. Dann <b>📋 Abgleich prüfen</b>.', 'Die Pumpe steht auf <b>5 m</b>. Das ist zu viel. Dreh sie <b>runter</b>. Jeder Raum braucht aber noch 90 %. Dann <b>📋 Prüfen</b>.'), 'nachdenklich');
-    else sim.hinweis(L('Neubau Okafor: EG und Bad mit <b>Fußbodenheizung</b> (35/30 °C), oben Heizkörper (55/45 °C). Bei der FBH zeigt der <b>Durchflussmesser am Verteiler</b> l/min je Kreis. Gleiche alles ab und stell die Pumpe sparsam ein.', 'Neubau Okafor: unten <b>Fußbodenheizung</b>, oben Heizkörper. Die FBH braucht viel Wasser. Gleiche alles ab. Pumpe sparsam.'), 'froh');
+    if (ansicht > 0 && !api.speicher('d' + ansicht)) { sim.hinweis(demoHinweis(ansicht), 'froh'); return; }
+    if (ansicht === 0) { if (tut < TUT.length) sim.hinweis(TUT[tut](), tut === 2 ? 'nachdenklich' : 'froh'); else sim.hinweis(L('Ziel: In der Messung bekommen alle Räume 90–110 % ihres Soll-Volumenstroms. <b>Prüfe</b> dann mit 📋 Abgleich prüfen.', 'Ziel: Alle Räume grün (90 bis 110 %). <b>Prüfe</b> dann mit 📋.'), 'froh'); }
+    else if (ansicht === 1) sim.hinweis(L('Herr Yilmaz hat die Pumpe „zur Sicherheit“ auf <b>5 m</b> gedreht. Jetzt bekommt jeder Raum zu viel Wasser, die Pumpe braucht unnötig Strom und es drohen Geräusche. 1. <b>Stelle</b> die Pumpe so niedrig wie möglich ein – der ungünstigste Raum braucht noch 90 %. 2. <b>Prüfe</b> mit 📋 Abgleich prüfen.', 'Die Pumpe steht auf 5 m. Das ist zu viel. 1. <b>Dreh</b> sie runter. Jeder Raum braucht aber 90 %. 2. <b>Prüfe</b> mit 📋.'), 'nachdenklich');
+    else sim.hinweis(L('Neubau Okafor: EG und Bad mit <b>Fußbodenheizung</b> (35/30 °C), oben Heizkörper (55/45 °C). Bei der FBH zeigt der <b>Durchflussmesser am Verteiler</b> l/min je Kreis. 1. <b>Gleiche</b> alle Räume ab. 2. <b>Stelle</b> die Pumpe sparsam ein.', 'Neubau Okafor: unten Fußbodenheizung, oben Heizkörper. Die FBH braucht viel Wasser. 1. <b>Gleiche</b> alles ab. 2. <b>Stelle</b> die Pumpe sparsam ein.'), 'froh');
   }
   function mindestens(n) { if (tut < n && tut < TUT.length) { tut = n; api.speicher('t', tut); } }
   function schlechtester(a) { return a.zeilen.slice().sort(function (x, y) { return x.m.x - y.m.x; })[0]; }
@@ -570,7 +625,7 @@ function abgleichSpiel(box, api) {
       if (!a.zeilen.length) return;
       if (!a.alle && a.zeilen.filter(function (z) { return z.m.x > 1.3; }).length >= 2 && ansicht !== 1) s.sag(L('Die Pumpe drückt jetzt mit ' + hyZahl(h.pumpe, 1) + ' m. Die fernen Räume bekommen mehr – die <b>nahen aber auch</b>. Ohne Abgleich verschiebst du nur das Problem und zahlst Strom (≈ ' + a.watt + ' W).', 'Die Pumpe drückt mehr. Die nahen Räume bekommen noch mehr Wasser. Das kostet Strom (≈ ' + a.watt + ' W).'), 'warn');
       else if (w.m.x < 0.9 && w.r.vor >= 7) s.sag(L(hyName(w.r) + ' steht schon auf <b>N</b> (ganz offen) und bekommt nur ' + hyZahl(w.m.x * 100) + ' %: Hier hilft nur mehr Förderhöhe.', hyName(w.r) + ' ist schon ganz offen (N). Er bekommt zu wenig. Die Pumpe muss höher.'), 'warn');
-      else s.sag(L('Pumpe ' + hyZahl(h.pumpe, 1) + ' m ≈ ' + a.watt + ' W · ungünstigster Raum: ' + hyName(w.r) + ' mit ' + hyZahl(w.m.x * 100) + ' %.', 'Pumpe ' + hyZahl(h.pumpe, 1) + ' m. Am wenigsten: ' + hyName(w.r) + ' ' + hyZahl(w.m.x * 100) + ' %.'), '');
+      else s.sag(L('Pumpe ' + hyZahl(h.pumpe, 1) + ' m ≈ ' + a.watt + ' W · am wenigsten versorgt: ' + hyName(w.r) + ' mit ' + hyZahl(w.m.x * 100) + ' %.', 'Pumpe ' + hyZahl(h.pumpe, 1) + ' m. Am wenigsten: ' + hyName(w.r) + ' ' + hyZahl(w.m.x * 100) + ' %.'), '');
     } else if (was === 'vor' && r) {
       var m = HY.rechne(h, true).raeume[i];
       s.sag(L(hyName(r) + ': Voreinstellung ' + hyVor(r.vor) + ' → ' + hyZahl(m.V) + ' von ' + hyZahl(m.vs) + ' l/h (' + hyZahl(m.x * 100) + ' %) bei abgenommenem Kopf. Kleinere Zahl = mehr Widerstand = weniger Wasser.', hyName(r) + ': ' + hyZahl(m.x * 100) + ' %. Kleine Zahl = weniger Wasser.'), m.x >= 0.9 && m.x <= 1.1 ? 'ok' : '');
@@ -601,6 +656,7 @@ function abgleichSpiel(box, api) {
     zeigeTut();
   }
   function start() {
+    if (!api.speicher('e') && !api.geschafft('S1')) { einstufen(); return; }
     box.innerHTML = '';
     sim = null;
     sim = hausSimulator(box, api, { haus: ansicht === 'frei' ? frei : hausFuer(ansicht), bauen: ansicht === 'frei', profi: PFAD.stufe === 'profi', kopf: kopf(), beiAenderung: kommentar, ziel: ziel });
@@ -609,6 +665,7 @@ function abgleichSpiel(box, api) {
   start();
   return {
     loesen: function () {
+      api.speicher('e', 'basis'); api.speicher('d1', 1); api.speicher('d2', 1);
       LEVEL.forEach(function (lv, n) { ansicht = n; haeuser[n] = HY.automatik(n === 1 ? hausYilmaz() : lv.haus()); start(); sim.profiAlle(); sim.pruefe(true); });
     }
   };
@@ -652,7 +709,7 @@ function uebungSoll(box, api) {
         s.sag(L('✔ Alle vier Werte stimmen. Fällt dir das Bad auf? Kleine Heizlast, aber mit 5 K Spreizung viel Wasser.', '✔ Alles richtig. Das Bad hat FBH: Es braucht viel Wasser.'), 'ok');
       }
     } });
-  sim.hinweis(L('Tippe jeden Raum an und berechne seinen Soll-Volumenstrom: V = Q / (1,163 · ΔT).', 'Tippe jeden Raum an. Rechne: V = Q / (1,163 · ΔT).'), 'froh');
+  sim.hinweis(L('1. <b>Tippe</b> jeden Raum an. 2. <b>Berechne</b> seinen Soll-Volumenstrom: V = Q / (1,163 · ΔT).', '1. <b>Tippe</b> jeden Raum an. 2. <b>Rechne</b>: V = Q / (1,163 · ΔT).'), 'froh');
   return { loesen: function () { sim.profiAlle(); fertig = true; api.notiere(L('Soll-Volumenstrom der Ferienwohnung', 'Soll der Ferienwohnung'), '<p>Musterlösung</p>'); api.erledigt(L('Für alle vier Räume den Soll-Volumenstrom richtig berechnet.', 'Alle 4 Räume richtig gerechnet.')); } };
 }
 
@@ -660,7 +717,7 @@ function uebungSoll(box, api) {
 function nachweisBerger(box) {
   var h = hausBerger();
   var sim = hausSimulator(box, null, { haus: h, stumm: true, profi: false });
-  box.insertBefore(KIT.el('p', { html: L('<b>Haus Berger</b> · Kessel neu, nie abgeglichen. Stell Voreinstellungen und Pumpe ein. Nutze die <b>Messung</b>. Es gibt keine Rückmeldung – wenn du fertig bist, gib Teil A ab.', '<b>Haus Berger.</b> Stell die Ventile und die Pumpe ein. Nutze die <b>Messung</b>. Es gibt keine Hilfe. Dann gib ab.') }), box.firstChild);
+  box.insertBefore(KIT.el('p', { html: L('Haus Berger · Kessel neu, nie abgeglichen. Es gibt keine Rückmeldung. 1. <b>Miss</b> mit 🔧. 2. <b>Stelle</b> Voreinstellungen und Pumpe ein. 3. <b>Gib</b> Teil A ab.', 'Haus Berger. Es gibt keine Hilfe. 1. <b>Miss</b> mit 🔧. 2. <b>Stelle</b> Ventile und Pumpe ein. 3. <b>Gib</b> ab.') }), box.firstChild);
   return {
     auswerten: function () {
       var a = sim.auswertung(), z = a.zeilen, ok = function (f) { return z.filter(f).every(function (x) { return x.ok; }); };
@@ -682,7 +739,7 @@ window.PAKET = {
   id: 'shk-hydraulischer-abgleich',
   titel: 'Im Gleichgewicht',
   untertitel: 'Hydraulischer Abgleich – du gleichst ein ganzes Haus ab',
-  version: '0.5',
+  version: '0.6',
   bestehen: 80,
   dauer: 'etwa 90 Minuten',
   welt: { thema: 'technik', kulisse: 'werkstatt', symbol: '🔥' },
@@ -693,31 +750,31 @@ window.PAKET = {
 
   stationen: [
     { id: 'S1', titel: 'Auftrag 1 · Haus Yilmaz: das kalte Kinderzimmer', lz: ['LZ1', 'LZ2', 'LZ3'], check: ['C1', 'C2', 'C3'],
-      mitdenken: { auftrag: 'Erklär Herrn Yilmaz in drei Sätzen, warum Aufdrehen am Thermostat im Kinderzimmer nichts gebracht hat.', muster: 'Das Thermostatventil war schon ganz offen, mehr Durchfluss geht damit nicht. Das Heizwasser nimmt den Weg mit dem kleinsten Widerstand, also die nahen Heizkörper im EG. Erst wenn diese per Voreinstellung gedrosselt sind, kommt oben genug an.' } },
+      mitdenken: { auftrag: '<b>Erkläre</b> Herrn Yilmaz in drei Sätzen, warum Aufdrehen am Thermostat im Kinderzimmer nichts gebracht hat.' + SATZ(['Das Ventil im Kinderzimmer war schon …', 'Das Heizwasser fließt vor allem …, weil …', 'Erst wenn …, kommt oben genug an.']), muster: 'Das Thermostatventil war schon ganz offen, mehr Durchfluss geht damit nicht. Das Heizwasser nimmt den Weg mit dem kleinsten Widerstand, also die nahen Heizkörper im EG. Erst wenn diese per Voreinstellung gedrosselt sind, kommt oben genug an.' } },
     { id: 'S2', titel: 'Auftrag 2 · Haus Yilmaz: die Pumpe richtig einstellen', lz: ['LZ4'], check: ['C4', 'C5', 'C6'],
-      mitdenken: { auftrag: 'Skizziere auf Papier, wie sich Stromverbrauch und Versorgung des ungünstigsten Raums ändern, wenn du die Pumpe von 5 m auf 3 m herunterdrehst.', muster: 'Stromverbrauch sinkt deutlich (bei Yilmaz von etwa 37 W auf rund 20 W). Die Versorgung des ungünstigsten Raums sinkt auch – solange er noch mindestens 90 % bekommt, ist die kleinere Förderhöhe besser.' } },
+      mitdenken: { auftrag: '<b>Skizziere</b> auf Papier, wie sich Stromverbrauch und Versorgung des ungünstigsten Raums ändern, wenn du die Pumpe von 5 m auf 3 m herunterdrehst.' + SATZ(['Wenn ich die Pumpe herunterdrehe, sinkt …', 'Der ungünstigste Raum bekommt dann …', 'Ich darf so weit herunter, bis …']), muster: 'Stromverbrauch sinkt deutlich (bei Yilmaz von etwa 37 W auf rund 20 W). Die Versorgung des ungünstigsten Raums sinkt auch – solange er noch mindestens 90 % bekommt, ist die kleinere Förderhöhe besser.' } },
     { id: 'S3', titel: 'Auftrag 3 · Neubau Okafor: Fußbodenheizung und Heizkörper', lz: ['LZ5', 'LZ2'], check: ['C7', 'C8', 'C9'],
-      mitdenken: { auftrag: 'Erklär einer Mitschülerin, warum das Wohnzimmer der Okafors mehr Heizwasser braucht als ein gleich großer Raum mit Heizkörper.', muster: 'Die Fußbodenheizung arbeitet mit 35/30 °C, also nur 5 K Spreizung. Jeder Liter Wasser gibt dadurch nur halb so viel Wärme ab wie bei 10 K. Für dieselbe Heizlast braucht der Raum deshalb doppelt so viel Volumenstrom.' } }
+      mitdenken: { auftrag: '<b>Erkläre</b> einer Mitschülerin, warum das Wohnzimmer der Okafors mehr Heizwasser braucht als ein gleich großer Raum mit Heizkörper.' + SATZ(['Die Fußbodenheizung hat eine Spreizung von …', 'Bei kleinerer Spreizung gibt jeder Liter …', 'Deshalb braucht der Raum …']), muster: 'Die Fußbodenheizung arbeitet mit 35/30 °C, also nur 5 K Spreizung. Jeder Liter Wasser gibt dadurch nur halb so viel Wärme ab wie bei 10 K. Für dieselbe Heizlast braucht der Raum deshalb doppelt so viel Volumenstrom.' } }
   ],
 
   uebungen: [
     { id: 'U1', titel: 'Kita Sonnenschein: nur mit der Voreinstellung', lz: ['LZ1', 'LZ3'],
-      auftrag: 'In der Kita Sonnenschein ist die Pumpe vom Planer fest auf 4 m eingestellt. Gleiche alle acht Räume nur mit der Voreinstellung ab.',
+      auftrag: 'In der Kita Sonnenschein ist die Pumpe vom Planer fest auf 4 m eingestellt. 1. <b>Miss</b> alle Räume mit abgenommenen Köpfen. 2. <b>Stelle</b> jeden Raum nur über die Voreinstellung auf 90–110 % ein.',
       interaktion: uebungAbgleich(hausKita, { pumpeFest: true, titel: 'Abgleich Kita Sonnenschein',
-        hinweis: function () { return L('Die Pumpe bleibt auf 4 m. Miss mit 🔧 und stell jeden Raum über die Voreinstellung auf 90–110 %.', 'Die Pumpe bleibt bei 4 m. Stell nur die Ventile ein.'); } }),
+        hinweis: function () { return L('Die Pumpe bleibt auf 4 m. 1. <b>Miss</b> mit 🔧. 2. <b>Stelle</b> jeden Raum am gelben Ring auf 90–110 % ein.', 'Die Pumpe bleibt bei 4 m. <b>Stelle</b> nur die Ventile ein.'); } }),
       tipps: ['Schalte auf 🔧 Messung. Welche Räume sind orange, welche rot?', 'Die Küche und der Waschraum liegen nah am Heizraum und bekommen weit über 150 %. Dreh dort die Voreinstellung deutlich herunter (etwa auf 3–4).', 'Gruppenraum Eulen ganz hinten bleibt auf N. Alle anderen drosseln, bis der Balken im grünen Feld steht – etwa Bären 6, Küche 3½, Waschraum 3½, Garderobe 4, Füchse 6¼, Ruheraum 5½, Leitung 5.'],
-      reflexion: { frage: 'Warum brauchen Räume nahe am Heizraum eine kleinere Voreinstellung als Räume weit hinten?', muster: 'Ihr Leitungsweg hat wenig Widerstand. Damit sie nicht zu viel Wasser bekommen, muss das Ventil den fehlenden Widerstand ausgleichen – also stärker drosseln.' } },
+      reflexion: { frage: '<b>Erkläre</b>: Warum brauchen Räume nahe am Heizraum eine kleinere Voreinstellung als Räume weit hinten?' + SATZ(['Nahe Räume haben einen … Leitungsweg.', 'Deshalb muss das Ventil …']), muster: 'Ihr Leitungsweg hat wenig Widerstand. Damit sie nicht zu viel Wasser bekommen, muss das Ventil den fehlenden Widerstand ausgleichen – also stärker drosseln.' } },
     { id: 'U2', titel: 'Ferienwohnung: Soll-Volumenstrom berechnen', lz: ['LZ2'],
-      auftrag: 'Für die Ferienwohnung im Dachgeschoss fehlen im Protokoll die Soll-Volumenströme. Berechne sie für alle vier Räume.',
+      auftrag: 'Für die Ferienwohnung im Dachgeschoss fehlen im Protokoll die Soll-Volumenströme. <b>Berechne</b> sie für alle vier Räume.',
       interaktion: uebungSoll,
       tipps: ['Die Formel lautet V = Q / (1,163 · ΔT). Q steht im Raum als Heizlast, ΔT ist die Spreizung.', 'Heizkörper: 55/45 °C → ΔT = 10 K. Fußbodenheizung: 35/30 °C → ΔT = 5 K.', 'Wohnküche: 1440 W / 11,63 ≈ 124 l/h. Bad (FBH): 470 W / 5,815 ≈ 81 l/h. Schlafzimmer: 900 W / 11,63 ≈ 77 l/h. Flur: 420 W / 11,63 ≈ 36 l/h.'],
-      reflexion: { frage: 'Das Bad hat nur ein Drittel der Heizlast der Wohnküche, braucht aber 81 statt 124 l/h – also mehr als die Hälfte. Warum?', muster: 'Das Bad hat Fußbodenheizung mit nur 5 K Spreizung. Halbe Spreizung bedeutet doppelten Volumenstrom bei gleicher Heizlast.' } },
+      reflexion: { frage: 'Das Bad hat nur ein Drittel der Heizlast der Wohnküche, braucht aber 81 statt 124 l/h – also mehr als die Hälfte. <b>Erkläre</b>, warum.' + SATZ(['Das Bad hat … mit einer Spreizung von …', 'Halbe Spreizung bedeutet …']), muster: 'Das Bad hat Fußbodenheizung mit nur 5 K Spreizung. Halbe Spreizung bedeutet doppelten Volumenstrom bei gleicher Heizlast.' } },
     { id: 'U3', titel: 'Praxis Dr. Okonkwo: sparsam abgleichen', lz: ['LZ4', 'LZ5'],
-      auftrag: 'In der Arztpraxis läuft die Pumpe auf 5 m, Wartezimmer und Empfang haben Fußbodenheizung. Gleiche ab und stell die Pumpe so sparsam wie möglich ein.',
+      auftrag: 'In der Arztpraxis läuft die Pumpe auf 5 m, Wartezimmer und Empfang haben Fußbodenheizung. 1. <b>Gleiche</b> alle Räume auf 90–110 % ab. 2. <b>Stelle</b> die Pumpe so niedrig wie möglich ein.',
       interaktion: uebungAbgleich(hausPraxis, { sparsam: true, titel: 'Abgleich Praxis Dr. Okonkwo',
-        hinweis: function () { return L('Erst den ungünstigsten Raum finden, dann Pumpe und Voreinstellungen anpassen. Ziel: alle 90–110 % mit möglichst kleiner Förderhöhe.', 'Finde den Raum mit dem wenigsten Wasser. Dann Pumpe und Ventile einstellen.'); } }),
+        hinweis: function () { return L('1. <b>Suche</b> den ungünstigsten Raum. 2. <b>Stelle</b> Pumpe und Voreinstellungen ein. Ziel: alle 90–110 % mit möglichst kleiner Förderhöhe.', '1. <b>Suche</b> den Raum mit dem wenigsten Wasser. 2. <b>Stelle</b> Pumpe und Ventile ein.'); } }),
       tipps: ['Der ungünstigste Raum ist der mit dem weitesten Weg: das Büro von Dr. Okonkwo im OG hinten. Stell ihn auf N.', 'Senke die Pumpe, bis das Büro gerade noch 90–110 % bekommt – das ist bei 3,5 m. Dann alle anderen Räume drosseln.', 'Bei 3,5 m passen etwa: Wartezimmer 4¾, Empfang 4¼, WC 2½, Behandlung 1: 4¾, Behandlung 2: 5, Labor 4½, Büro N (mit 🔧 nachprüfen).'],
-      reflexion: { frage: 'Warum hat die Pumpe nach dem Abgleich auf 3,5 m gereicht, obwohl vorher 5 m eingestellt waren?', muster: 'Vorher haben die nahen Räume viel zu viel Wasser bekommen. Nach dem Drosseln fließt nur noch der Soll-Volumenstrom. Die Förderhöhe muss nur noch den ungünstigsten Raum versorgen.' } }
+      reflexion: { frage: '<b>Erkläre</b>: Warum hat die Pumpe nach dem Abgleich auf 3,5 m gereicht, obwohl vorher 5 m eingestellt waren?' + SATZ(['Vorher haben die nahen Räume …', 'Nach dem Drosseln muss die Pumpe nur noch …']), muster: 'Vorher haben die nahen Räume viel zu viel Wasser bekommen. Nach dem Drosseln fließt nur noch der Soll-Volumenstrom. Die Förderhöhe muss nur noch den ungünstigsten Raum versorgen.' } }
   ],
 
   nachweis: {
@@ -726,7 +783,7 @@ window.PAKET = {
     einleitung: 'Heute fährst du <b>allein</b> zu Familie Berger. Kessel neu, nie abgeglichen, die Pumpe steht auf 4,5 m. Ich schaue mir dein Protokoll später an – es gibt unterwegs keine Hinweise.',
     teilA: {
       titel: 'Haus Berger abgleichen',
-      auftrag: 'Gleiche alle Räume auf 90–110 % ihres Soll-Volumenstroms ab und stell die Pumpe so niedrig wie möglich ein. Dann gib Teil A ab.',
+      auftrag: '1. <b>Gleiche</b> alle Räume auf 90–110 % ihres Soll-Volumenstroms ab. 2. <b>Stelle</b> die Pumpe so niedrig wie möglich ein. 3. <b>Gib</b> Teil A ab.',
       interaktion: nachweisBerger
     },
     teilB: { proLZ: 2 }
@@ -766,21 +823,21 @@ window.PAKET = {
   ],
 
   glossar: [
-    { begriff: 'Hydraulischer Abgleich', erklaerung: 'Alle Heizflächen werden so eingestellt, dass jede genau so viel Heizwasser bekommt, wie sie braucht.', vorab: true },
-    { begriff: 'Volumenstrom', erklaerung: 'So viel Heizwasser fließt pro Zeit durch eine Heizfläche, in l/h.', vorab: true },
-    { begriff: 'Heizlast', erklaerung: 'So viel Wärme braucht ein Raum am kältesten Tag, in Watt (W).', vorab: true },
-    { begriff: 'Spreizung', erklaerung: 'Unterschied zwischen Vorlauf- und Rücklauftemperatur, z. B. 55/45 °C = 10 K.', vorab: true },
-    { begriff: 'Voreinstellung', erklaerung: 'Einstellring am Thermostatventil. Er begrenzt den größten Durchfluss. 1 = stark gedrosselt, N = ganz offen.', vorab: true },
-    { begriff: 'Thermostatkopf', erklaerung: 'Regelt die Raumtemperatur. Er öffnet oder schließt das Ventil, je nach Temperatur.' },
-    { begriff: 'Ventilhub', erklaerung: 'Wie weit das Ventil gerade offen ist, in Prozent.' },
-    { begriff: 'Differenzdruck', erklaerung: 'Druckunterschied vor und hinter einem Bauteil, in mbar. Hoher Differenzdruck am fast geschlossenen Ventil führt zu Pfeifen.' },
-    { begriff: 'Förderhöhe', erklaerung: 'Druck, den die Heizungspumpe erzeugt, in Metern (1 m ≈ 100 mbar).', vorab: true },
-    { begriff: 'Δp-konstant', erklaerung: 'Regelart der Pumpe: Sie hält die eingestellte Förderhöhe konstant.' },
-    { begriff: 'Unterversorgung', erklaerung: 'Ein Raum bekommt weniger Heizwasser, als er braucht. Er wird nicht warm.' },
-    { begriff: 'Überversorgung', erklaerung: 'Ein Raum bekommt mehr Heizwasser, als er braucht. Das Wasser fehlt anderen Räumen.' },
-    { begriff: 'Ungünstigster Raum', erklaerung: 'Der Raum, der bei Soll-Volumenstrom den größten Druckverlust hat – meist der am weitesten entfernte. Er bestimmt die nötige Förderhöhe.' },
-    { begriff: 'Heizkreisverteiler', erklaerung: 'Verteilt bei der Fußbodenheizung das Heizwasser auf die einzelnen Heizkreise.' },
-    { begriff: 'Durchflussmesser', erklaerung: 'Anzeige am Heizkreisverteiler. Zeigt den Volumenstrom eines Heizkreises, meist in l/min.' }
+    { begriff: 'Hydraulischer Abgleich', erklaerung: '<i>der hydraulische Abgleich, die hydraulischen Abgleiche</i> – Alle Heizflächen werden so eingestellt, dass jede genau so viel Heizwasser bekommt, wie sie braucht.', vorab: true },
+    { begriff: 'Volumenstrom', erklaerung: '<i>der Volumenstrom, die Volumenströme</i> – So viel Heizwasser fließt pro Zeit durch eine Heizfläche, in l/h.', vorab: true },
+    { begriff: 'Heizlast', erklaerung: '<i>die Heizlast, die Heizlasten</i> – So viel Wärme braucht ein Raum am kältesten Tag, in Watt (W).', vorab: true },
+    { begriff: 'Spreizung', erklaerung: '<i>die Spreizung, die Spreizungen</i> – Unterschied zwischen Vorlauf- und Rücklauftemperatur, z. B. 55/45 °C = 10 K.', vorab: true },
+    { begriff: 'Voreinstellung', erklaerung: '<i>die Voreinstellung, die Voreinstellungen</i> – Einstellring am Thermostatventil. Er begrenzt den größten Durchfluss. 1 = stark gedrosselt, N = ganz offen.', vorab: true },
+    { begriff: 'Thermostatkopf', erklaerung: '<i>der Thermostatkopf, die Thermostatköpfe</i> – Regelt die Raumtemperatur. Er öffnet oder schließt das Ventil, je nach Temperatur.' },
+    { begriff: 'Ventilhub', erklaerung: '<i>der Ventilhub, die Ventilhübe</i> – Wie weit das Ventil gerade offen ist, in Prozent.' },
+    { begriff: 'Differenzdruck', erklaerung: '<i>der Differenzdruck, die Differenzdrücke</i> – Druckunterschied vor und hinter einem Bauteil, in mbar. Hoher Differenzdruck am fast geschlossenen Ventil führt zu Pfeifen.' },
+    { begriff: 'Förderhöhe', erklaerung: '<i>die Förderhöhe, die Förderhöhen</i> – Druck, den die Heizungspumpe erzeugt, in Metern (1 m ≈ 100 mbar).', vorab: true },
+    { begriff: 'Δp-konstant', erklaerung: '<i>Regelart der Pumpe, gesprochen „Delta p konstant“</i> – Regelart der Pumpe: Sie hält die eingestellte Förderhöhe konstant.' },
+    { begriff: 'Unterversorgung', erklaerung: '<i>die Unterversorgung, ohne Plural</i> – Ein Raum bekommt weniger Heizwasser, als er braucht. Er wird nicht warm.' },
+    { begriff: 'Überversorgung', erklaerung: '<i>die Überversorgung, ohne Plural</i> – Ein Raum bekommt mehr Heizwasser, als er braucht. Das Wasser fehlt anderen Räumen.' },
+    { begriff: 'Ungünstigster Raum', erklaerung: '<i>der ungünstigste Raum, die ungünstigsten Räume</i> – Der Raum, der bei Soll-Volumenstrom den größten Druckverlust hat – meist der am weitesten entfernte. Er bestimmt die nötige Förderhöhe.' },
+    { begriff: 'Heizkreisverteiler', erklaerung: '<i>der Heizkreisverteiler, die Heizkreisverteiler</i> – Verteilt bei der Fußbodenheizung das Heizwasser auf die einzelnen Heizkreise.' },
+    { begriff: 'Durchflussmesser', erklaerung: '<i>der Durchflussmesser, die Durchflussmesser</i> – Anzeige am Heizkreisverteiler. Zeigt den Volumenstrom eines Heizkreises, meist in l/min.' }
   ],
 
   fragen: [

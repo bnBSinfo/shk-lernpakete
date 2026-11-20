@@ -29,35 +29,35 @@
       LZ5: { kurz: 'Heizflächen', text: 'Ich kenne die Unterschiede: Heizkörper und Fußbodenheizung.' }
     },
     glossar: {
-      'Hydraulischer Abgleich': { erklaerung: 'Jede Heizfläche bekommt genau so viel Wasser, wie sie braucht.' },
-      'Volumenstrom': { erklaerung: 'So viel Wasser fließt in einer Stunde. Einheit: l/h.' },
-      'Heizlast': { erklaerung: 'So viel Wärme braucht ein Raum im Winter. Einheit: Watt (W).' },
-      'Spreizung': { erklaerung: 'Vorlauf minus Rücklauf. Beispiel: 55 °C − 45 °C = 10 K.' },
-      'Voreinstellung': { erklaerung: 'Ein Ring am Ventil. Er bremst das Wasser. 1 = viel bremsen. N = gar nicht bremsen.' },
-      'Thermostatkopf': { erklaerung: 'Der Drehknopf am Heizkörper. Er macht das Ventil auf oder zu.' },
-      'Ventilhub': { erklaerung: 'So weit ist das Ventil gerade offen. In Prozent.' },
-      'Differenzdruck': { erklaerung: 'Druck vor dem Bauteil minus Druck danach. Einheit: mbar. Viel Druck am fast zuen Ventil: Es pfeift.' },
-      'Förderhöhe': { erklaerung: 'So stark drückt die Pumpe. Einheit: Meter. 1 m sind etwa 100 mbar.' },
-      'Δp-konstant': { erklaerung: 'Die Pumpe hält ihren Druck immer gleich.' },
-      'Unterversorgung': { erklaerung: 'Ein Raum bekommt zu wenig Wasser. Er wird nicht warm.' },
-      'Überversorgung': { erklaerung: 'Ein Raum bekommt zu viel Wasser. Das Wasser fehlt woanders.' },
-      'Heizkreisverteiler': { erklaerung: 'Er verteilt bei der Fußbodenheizung das Wasser auf die Kreise.' },
-      'Durchflussmesser': { erklaerung: 'Eine Anzeige am Verteiler. Sie zeigt das Wasser pro Kreis. Meist in l/min.' },
-      'Ungünstigster Raum': { erklaerung: 'Der Raum mit dem schwersten Weg. Meist der Raum ganz hinten. Nach ihm stellt man die Pumpe ein.' }
+      'Hydraulischer Abgleich': { erklaerung: '<i>der hydraulische Abgleich, die hydraulischen Abgleiche</i> – Jede Heizfläche bekommt genau so viel Wasser, wie sie braucht.' },
+      'Volumenstrom': { erklaerung: '<i>der Volumenstrom, die Volumenströme</i> – So viel Wasser fließt in einer Stunde. Einheit: l/h.' },
+      'Heizlast': { erklaerung: '<i>die Heizlast, die Heizlasten</i> – So viel Wärme braucht ein Raum im Winter. Einheit: Watt (W).' },
+      'Spreizung': { erklaerung: '<i>die Spreizung, die Spreizungen</i> – Vorlauf minus Rücklauf. Beispiel: 55 °C − 45 °C = 10 K.' },
+      'Voreinstellung': { erklaerung: '<i>die Voreinstellung, die Voreinstellungen</i> – Ein Ring am Ventil. Er bremst das Wasser. 1 = viel bremsen. N = gar nicht bremsen.' },
+      'Thermostatkopf': { erklaerung: '<i>der Thermostatkopf, die Thermostatköpfe</i> – Der Drehknopf am Heizkörper. Er macht das Ventil auf oder zu.' },
+      'Ventilhub': { erklaerung: '<i>der Ventilhub, die Ventilhübe</i> – So weit ist das Ventil gerade offen. In Prozent.' },
+      'Differenzdruck': { erklaerung: '<i>der Differenzdruck, die Differenzdrücke</i> – Druck vor dem Bauteil minus Druck danach. Einheit: mbar. Viel Druck am fast zuen Ventil: Es pfeift.' },
+      'Förderhöhe': { erklaerung: '<i>die Förderhöhe, die Förderhöhen</i> – So stark drückt die Pumpe. Einheit: Meter. 1 m sind etwa 100 mbar.' },
+      'Δp-konstant': { erklaerung: '<i>Regelart der Pumpe, gesprochen „Delta p konstant“</i> – Die Pumpe hält ihren Druck immer gleich.' },
+      'Unterversorgung': { erklaerung: '<i>die Unterversorgung, ohne Plural</i> – Ein Raum bekommt zu wenig Wasser. Er wird nicht warm.' },
+      'Überversorgung': { erklaerung: '<i>die Überversorgung, ohne Plural</i> – Ein Raum bekommt zu viel Wasser. Das Wasser fehlt woanders.' },
+      'Heizkreisverteiler': { erklaerung: '<i>der Heizkreisverteiler, die Heizkreisverteiler</i> – Er verteilt bei der Fußbodenheizung das Wasser auf die Kreise.' },
+      'Durchflussmesser': { erklaerung: '<i>der Durchflussmesser, die Durchflussmesser</i> – Eine Anzeige am Verteiler. Sie zeigt das Wasser pro Kreis. Meist in l/min.' },
+      'Ungünstigster Raum': { erklaerung: '<i>der ungünstigste Raum, die ungünstigsten Räume</i> – Der Raum mit dem schwersten Weg. Meist der Raum ganz hinten. Nach ihm stellt man die Pumpe ein.' }
     },
     uebungen: {
-      U1: { titel: 'Kita Sonnenschein: nur mit der Voreinstellung', auftrag: 'In der Kita steht die Pumpe fest auf 4 m. Stell alle 8 Räume nur mit der Voreinstellung ein.',
+      U1: { titel: 'Kita Sonnenschein: nur mit der Voreinstellung', auftrag: 'In der Kita steht die Pumpe fest auf 4 m. 1. <b>Miss</b> alle Räume. 2. <b>Stelle</b> alle 8 Räume nur mit der Voreinstellung ein.',
         tipps: ['Tippe auf 🔧 Messen. Welche Räume sind orange? Welche rot?', 'Küche und Waschraum sind nah am Keller. Sie bekommen viel zu viel. Dreh dort auf etwa 3 bis 4.', 'Eulen bleibt auf N. Etwa: Bären 6, Küche 3½, Waschraum 3½, Garderobe 4, Füchse 6¼, Ruheraum 5½, Leitung 5.'],
-        reflexion: { frage: 'Warum brauchen nahe Räume eine kleinere Voreinstellung?', muster: 'Ihr Weg ist kurz und leicht. Das Ventil muss mehr bremsen. Sonst bekommen sie zu viel Wasser.' } },
-      U2: { titel: 'Ferienwohnung: Soll berechnen', auftrag: 'Im Protokoll fehlen die Soll-Werte. Rechne sie für alle 4 Räume aus.',
+        reflexion: { frage: '<b>Erkläre</b>: Warum brauchen nahe Räume eine kleinere Voreinstellung?' + window.SATZ(['Nahe Räume haben einen … Weg.', 'Das Ventil muss …'], true), muster: 'Ihr Weg ist kurz und leicht. Das Ventil muss mehr bremsen. Sonst bekommen sie zu viel Wasser.' } },
+      U2: { titel: 'Ferienwohnung: Soll berechnen', auftrag: 'Im Protokoll fehlen die Soll-Werte. <b>Berechne</b> sie für alle 4 Räume.',
         tipps: ['Rechne: V = Q / (1,163 · ΔT). Q ist die Heizlast.', 'Heizkörper: ΔT = 10 K. Fußbodenheizung: ΔT = 5 K.', 'Wohnküche ≈ 124 l/h. Bad ≈ 81 l/h. Schlafzimmer ≈ 77 l/h. Flur ≈ 36 l/h.'],
-        reflexion: { frage: 'Das Bad braucht wenig Wärme. Aber viel Wasser. Warum?', muster: 'Das Bad hat FBH. Die Spreizung ist nur 5 K. Dann braucht man doppelt so viel Wasser.' } },
-      U3: { titel: 'Praxis Dr. Okonkwo: sparsam abgleichen', auftrag: 'In der Praxis steht die Pumpe auf 5 m. Gleiche ab. Stell die Pumpe so klein wie möglich.',
+        reflexion: { frage: 'Das Bad braucht wenig Wärme. Aber viel Wasser. <b>Erkläre</b>, warum.' + window.SATZ(['Das Bad hat …', 'Die Spreizung ist …'], true), muster: 'Das Bad hat FBH. Die Spreizung ist nur 5 K. Dann braucht man doppelt so viel Wasser.' } },
+      U3: { titel: 'Praxis Dr. Okonkwo: sparsam abgleichen', auftrag: 'In der Praxis steht die Pumpe auf 5 m. 1. <b>Gleiche</b> alle Räume ab. 2. <b>Stelle</b> die Pumpe so klein wie möglich ein.',
         tipps: ['Der Raum mit dem weitesten Weg ist das Büro oben hinten. Stell es auf N.', 'Dreh die Pumpe runter bis 3,5 m. Dann die anderen Räume bremsen.', 'Etwa: Wartezimmer 4¾, Empfang 4¼, WC 2½, Behandlung 1: 4¾, Behandlung 2: 5, Labor 4½, Büro N.'],
-        reflexion: { frage: 'Warum reichen jetzt 3,5 m statt 5 m?', muster: 'Vorher bekamen die nahen Räume viel zu viel. Jetzt fließt nur so viel wie nötig. Die Pumpe muss nur den Raum hinten schaffen.' } }
+        reflexion: { frage: '<b>Erkläre</b>: Warum reichen jetzt 3,5 m statt 5 m?' + window.SATZ(['Vorher bekamen die nahen Räume …', 'Jetzt muss die Pumpe nur …'], true), muster: 'Vorher bekamen die nahen Räume viel zu viel. Jetzt fließt nur so viel wie nötig. Die Pumpe muss nur den Raum hinten schaffen.' } }
     },
     nachweis: { einleitung: 'Heute fährst du <b>allein</b> zu Familie Berger. Der Kessel ist neu. Niemand hat abgeglichen. Die Pumpe steht auf 4,5 m. Es gibt keine Hinweise.',
-      teilA: { titel: 'Haus Berger abgleichen', auftrag: 'Alle Räume sollen 90 bis 110 % bekommen. Die Pumpe so klein wie möglich. Dann gib Teil A ab.' } },
+      teilA: { titel: 'Haus Berger abgleichen', auftrag: '1. <b>Gleiche</b> alle Räume auf 90 bis 110 % ab. 2. <b>Stelle</b> die Pumpe so klein wie möglich ein. 3. <b>Gib</b> Teil A ab.' } },
     merkblatt: {
       LZ1: { titel: 'Warum ein Abgleich?', zeilen: [{ text: 'Ohne Abgleich fließt das Wasser dorthin, wo der ___ am kleinsten ist.' }, { text: 'Nahe Räume sind ___. Ferne Räume sind ___.' }], fehler: 'Im kalten Raum das Thermostat aufdrehen. Das Ventil ist dort schon offen.', beispiel: 'Yilmaz: Küche 158 %. Can 77 %.' },
       LZ2: { titel: 'Soll-Volumenstrom', zeilen: [{ text: 'V = Q / (___ · ΔT)' }, { text: 'Heizkörper: ΔT = ___ K. Fußbodenheizung: ΔT = ___ K.' }], fehler: '1,163 oder ΔT vergessen.', beispiel: '930 W / (1,163 · 10 K) ≈ 80 l/h.' },
@@ -67,11 +67,11 @@
     },
     stationen: {
       S1: { titel: 'Auftrag 1 · Haus Yilmaz: das kalte Kinderzimmer',
-        mitdenken: { auftrag: 'Erklär Herrn Yilmaz in 3 Sätzen: Warum hilft Aufdrehen nicht?', muster: 'Das Ventil war schon ganz offen. Das Wasser fließt lieber in die nahen Räume. Erst wenn sie gebremst sind, kommt oben genug an.' } },
+        mitdenken: { auftrag: '<b>Erkläre</b> Herrn Yilmaz in 3 Sätzen: Warum hilft Aufdrehen nicht?' + window.SATZ(['Das Ventil war schon …', 'Das Wasser fließt lieber …', 'Erst wenn …'], true), muster: 'Das Ventil war schon ganz offen. Das Wasser fließt lieber in die nahen Räume. Erst wenn sie gebremst sind, kommt oben genug an.' } },
       S2: { titel: 'Auftrag 2 · Haus Yilmaz: die Pumpe richtig einstellen',
-        mitdenken: { auftrag: 'Zeichne auf Papier: Was passiert mit dem Strom? Was passiert mit dem Raum ganz hinten? Die Pumpe geht von 5 m auf 3 m.', muster: 'Der Strom sinkt. Bei Yilmaz von 37 W auf etwa 20 W. Der Raum hinten bekommt weniger. Aber noch 90 %. Das reicht.' } },
+        mitdenken: { auftrag: 'Die Pumpe geht von 5 m auf 3 m. <b>Zeichne</b> auf Papier: Was passiert mit dem Strom? Was passiert mit dem Raum ganz hinten?' + window.SATZ(['Der Strom …', 'Der Raum hinten bekommt …'], true), muster: 'Der Strom sinkt. Bei Yilmaz von 37 W auf etwa 20 W. Der Raum hinten bekommt weniger. Aber noch 90 %. Das reicht.' } },
       S3: { titel: 'Auftrag 3 · Neubau Okafor: Fußbodenheizung und Heizkörper',
-        mitdenken: { auftrag: 'Erklär einer Mitschülerin: Warum braucht das Wohnzimmer mit FBH mehr Wasser?', muster: 'Die FBH hat 35/30 °C. Das sind nur 5 K. Jeder Liter bringt nur halb so viel Wärme. Also braucht der Raum doppelt so viel Wasser.' } }
+        mitdenken: { auftrag: '<b>Erkläre</b> einer Mitschülerin: Warum braucht das Wohnzimmer mit FBH mehr Wasser?' + window.SATZ(['Die FBH hat …', 'Jeder Liter bringt …', 'Also braucht der Raum …'], true), muster: 'Die FBH hat 35/30 °C. Das sind nur 5 K. Jeder Liter bringt nur halb so viel Wärme. Also braucht der Raum doppelt so viel Wasser.' } }
     },
     fragen: {
       C1: { frage: 'Warum bekommt das Kinderzimmer oben zu wenig Wasser?',
