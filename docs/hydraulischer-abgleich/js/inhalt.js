@@ -121,15 +121,15 @@ function hausFrei() {
   '.hy-stock{display:grid;grid-template-columns:22px repeat(4,minmax(0,1fr));gap:6px;padding:6px 0}' +
   '.hy-strang{position:relative}' +
   '.hy-strang .hy-et{position:absolute;top:2px;left:-6px;right:-6px;text-align:center;font-size:.68rem;font-weight:800;background:#fff;border:1px solid #57534e;border-radius:6px;color:#44403c}' +
-  '.hy-decke{display:grid;grid-template-columns:22px repeat(4,minmax(0,1fr));gap:6px;height:16px;margin:0 -10px;padding:0 10px;background:radial-gradient(#6b7280 1px,transparent 1.5px) 0 0/6px 6px,#9ca3af;border-top:1px solid #4b5563;border-bottom:1px solid #4b5563}' +
+  '.hy-decke{display:grid;grid-template-columns:22px repeat(4,minmax(0,1fr));gap:6px;height:28px;margin:0 -10px;padding:0 10px;background:radial-gradient(#6b7280 1px,transparent 1.5px) 0 0/6px 6px,#9ca3af;border-top:1px solid #4b5563;border-bottom:1px solid #4b5563}' +
   '.hy-decke > div{position:relative}' +
-  '.hy-rohr{position:absolute;border-radius:3px;animation-duration:var(--d,2s);animation-timing-function:linear;animation-iteration-count:infinite}' +
-  '.hy-rohr.vl.h{background:linear-gradient(90deg,#dc2626 0 9px,#fca5a5 9px 16px) 0 0/16px 100%;animation-name:hy-r}.hy-rohr.rl.h{background:linear-gradient(90deg,#2563eb 0 9px,#93c5fd 9px 16px) 0 0/16px 100%;animation-name:hy-l}' +
-  '.hy-rohr.vl.v{background:linear-gradient(0deg,#dc2626 0 9px,#fca5a5 9px 16px) 0 0/100% 16px;animation-name:hy-o}.hy-rohr.rl.v{background:linear-gradient(0deg,#2563eb 0 9px,#93c5fd 9px 16px) 0 0/100% 16px;animation-name:hy-u}' +
-  '.hy-rohr.still{animation:none;opacity:.35}' +
+  '.hy-rohr{position:absolute;border-radius:4px;box-shadow:0 0 0 1px rgba(0,0,0,.25);animation-duration:var(--d,2s);animation-timing-function:linear;animation-iteration-count:infinite}' +
+  '.hy-rohr.vl.h{background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2210%22%3E%3Crect width=%2216%22 height=%2210%22 fill=%22%23dc2626%22/%3E%3Cpath d=%22M5 2 L10 5 L5 8%22 fill=%22none%22 stroke=%22white%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E") 0 0/16px 100% repeat-x;animation-name:hy-r}.hy-rohr.rl.h{background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2210%22%3E%3Crect width=%2216%22 height=%2210%22 fill=%22%232563eb%22/%3E%3Cpath d=%22M11 2 L6 5 L11 8%22 fill=%22none%22 stroke=%22white%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E") 0 0/16px 100% repeat-x;animation-name:hy-l}' +
+  '.hy-rohr.vl.v{background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%2216%22%3E%3Crect width=%2210%22 height=%2216%22 fill=%22%23dc2626%22/%3E%3Cpath d=%22M2 11 L5 6 L8 11%22 fill=%22none%22 stroke=%22white%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E") 0 0/100% 16px repeat-y;animation-name:hy-o}.hy-rohr.rl.v{background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%2216%22%3E%3Crect width=%2210%22 height=%2216%22 fill=%22%232563eb%22/%3E%3Cpath d=%22M2 5 L5 10 L8 5%22 fill=%22none%22 stroke=%22white%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E") 0 0/100% 16px repeat-y;animation-name:hy-u}' +
+  '.hy-rohr.still{animation:none;opacity:.3;filter:grayscale(1)}' +
   '@keyframes hy-r{to{background-position:16px 0}}@keyframes hy-l{to{background-position:-16px 0}}@keyframes hy-o{to{background-position:0 -16px}}@keyframes hy-u{to{background-position:0 16px}}' +
   '.hy-svgfl{stroke-dasharray:9 7;animation:hy-dl var(--d,2s) linear infinite}.hy-svgfl.rl{animation-name:hy-dr}@keyframes hy-dl{to{stroke-dashoffset:16}}@keyframes hy-dr{to{stroke-dashoffset:-16}}' +
-  '@media (prefers-reduced-motion:reduce){.hy-rohr,.hy-svgfl{animation:none}}' +
+  '@media (prefers-reduced-motion:reduce){.hy-rohr,.hy-svgfl{animation-duration:6s!important}}' +
   '.hy-gras{height:10px;margin:0 -12px;background:linear-gradient(#84cc16,#4d7c0f);position:relative;z-index:1}' +
   '.hy-erde{margin:0 -12px;padding:0 22px 12px;background:radial-gradient(#78350f 1.5px,transparent 2px) 0 0/9px 9px,radial-gradient(#b45309 1px,transparent 1.5px) 4px 5px/11px 11px,#a16207}' +
   '.hy-keller{display:grid;grid-template-columns:22px auto 1fr;gap:6px;align-items:end;padding:0 10px 10px;background:repeating-linear-gradient(45deg,#78716c 0 2px,#d6d3d1 2px 7px);border:2px solid #44403c;border-top:none}' +
@@ -137,7 +137,7 @@ function hausFrei() {
   '.hy-keller .hy-strang{align-self:stretch;min-height:96px}' +
   '.hy-keller svg{display:block;width:250px;max-width:100%;height:auto}' +
   '.hy-keller .hy-ger{background:#fff;border:1px solid #9ca3af;border-radius:8px;padding:3px 8px;font-weight:700;color:#1f2937;font-size:.85rem}' +
-  '.hy-raum{position:relative;display:flex;flex-direction:column;justify-content:space-between;min-height:172px;padding:0;border-radius:3px;border:3px solid #a8a29e;overflow:hidden;color:#1f2937;font:inherit;text-align:left;cursor:pointer;min-width:0;background:var(--wand,#fdf6e3)}' +
+  '.hy-raum{position:relative;display:flex;flex-direction:column;justify-content:space-between;min-height:206px;padding:0;border-radius:3px;border:3px solid #a8a29e;overflow:hidden;color:#1f2937;font:inherit;text-align:left;cursor:pointer;min-width:0;background:var(--wand,#fdf6e3)}' +
   '.hy-raum:hover{filter:brightness(1.03)}.hy-raum:focus-visible{outline:4px solid var(--accent);outline-offset:2px}' +
   '.hy-w-wohn{--wand:#fef3c7}.hy-w-kueche{--wand:linear-gradient(#f8fafc,#f8fafc) 0 0/100% 55% no-repeat,repeating-linear-gradient(0deg,#d1fae5 0 13px,#a7f3d0 13px 14px),repeating-linear-gradient(90deg,transparent 0 13px,#a7f3d0 13px 14px)}' +
   '.hy-w-schlaf{--wand:#ede9fe}.hy-w-kind{--wand:#fef9c3}.hy-w-buero{--wand:#f1f5f9}.hy-w-flur{--wand:#f5f5f4}' +
@@ -147,9 +147,9 @@ function hausFrei() {
   '.hy-raum.hy-gewaehlt{outline:4px solid var(--accent);outline-offset:2px}' +
   '.hy-raum.hy-leer{align-items:center;justify-content:center;color:#57534e;border:3px dashed #a8a29e;background:repeating-linear-gradient(45deg,#f5f5f4 0 8px,#e7e5e4 8px 16px);font-weight:700}' +
   '.hy-info{position:relative;z-index:2;margin:5px 5px 0;padding:4px 6px;border-radius:8px;background:rgba(255,255,255,.9);display:flex;flex-direction:column;align-items:stretch;gap:2px;box-shadow:0 1px 3px rgba(0,0,0,.15);border:0;font:inherit;color:#1f2937;text-align:left;cursor:pointer;min-height:0}' +
-  '.hy-th{position:absolute;left:30px;bottom:12px;z-index:3;display:flex;align-items:center;gap:1px}.hy-th.bhk{left:30px;bottom:16px}.hy-th.wand{left:50%;transform:translateX(-50%);bottom:14px;background:rgba(255,255,255,.7);border-radius:24px;padding:1px}' +
+  '.hy-th{position:absolute;left:44px;bottom:64px;z-index:3;display:flex;align-items:center;gap:1px}' +
   '.hy-stapel{display:flex;flex-direction:column;gap:2px}.hy-stapel button{min-width:28px;width:28px;min-height:21px;height:21px;padding:0;font-size:.95rem;font-weight:800;border-radius:6px;line-height:1}' +
-  '.hy-vt{position:absolute;right:4px;bottom:12px;z-index:3;display:flex;align-items:center;gap:1px}.hy-vt .ring{display:block;width:40px;height:40px;cursor:ns-resize;border-radius:50%}.hy-vt.aktiv .ring{box-shadow:0 0 0 3px var(--accent)}' +
+  '.hy-vt{position:absolute;left:46px;bottom:24px;z-index:3;display:flex;align-items:center;gap:1px}.hy-vt .ring{display:block;width:40px;height:40px;cursor:ns-resize;border-radius:50%}.hy-vt.aktiv .ring{box-shadow:0 0 0 3px var(--accent)}' +
   '.hy-th .knopf{display:block;width:44px;height:44px;cursor:ns-resize}' +
   '.hy-th .ab{font-size:.65rem;font-weight:700;background:#e5e7eb;border:1px solid #9ca3af;border-radius:6px;padding:2px 4px;color:#374151}' +
   '.hy-raum .hy-rk{font-weight:700;font-size:.78rem;line-height:1.15;padding-right:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}' +
@@ -160,12 +160,12 @@ function hausFrei() {
   '.hy-raum.hy-warm,.hy-raum.hy-zuviel{border-color:#ea580c;box-shadow:inset 0 0 0 999px rgba(249,115,22,.16)}.hy-raum.hy-gut{border-color:#16a34a}' +
   '.hy-kalt .hy-stat{background:#2563eb;color:#fff}.hy-zuwenig .hy-stat{background:#dc2626;color:#fff}.hy-warm .hy-stat,.hy-zuviel .hy-stat{background:#c2410c;color:#fff}.hy-gut .hy-stat{background:#15803d;color:#fff}' +
   '.hy-raum .hy-pf{position:absolute;right:4px;top:3px;font-size:.95rem}' +
-  '.hy-szene{position:relative;height:76px;flex:none}' +
-  '.hy-fen{position:absolute;left:6px;top:2px}.hy-hz{position:absolute;left:6px;bottom:9px}.hy-moebel{position:absolute;right:6px;bottom:8px;font-size:1.7rem;line-height:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,.25))}' +
+  '.hy-szene{position:relative;height:110px;flex:none}.hy-szene .hy-rohr{z-index:1}.hy-szene .hy-zu{left:61px;bottom:0;height:27px}.hy-szene .hy-ab{left:6px;bottom:0;height:34px}' +
+  '.hy-fen{position:absolute;right:8px;top:4px}.hy-hz{position:absolute;left:4px;bottom:22px;z-index:2}.hy-moebel{position:absolute;right:6px;bottom:8px;font-size:1.7rem;line-height:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,.25))}' +
   '.hy-bod{position:absolute;left:0;right:0;bottom:0;height:9px;background:repeating-linear-gradient(90deg,#c2803a 0 22px,#92400e 22px 23px),#c2803a}' +
   '.hy-bod.fliese{background:repeating-linear-gradient(90deg,#e5e7eb 0 13px,#9ca3af 13px 14px)}' +
   '.hy-bod svg{position:absolute;inset:0;width:100%;height:100%}' +
-  '@media (max-width:560px){.hy-fen,.hy-moebel,.hy-m2,.hy-raum .hy-kl{display:none}.hy-raum{min-height:132px}.hy-szene{height:48px}.hy-hz{transform:scale(.8);transform-origin:left bottom}.hy-raum .hy-gr{font-size:.95rem}.hy-th{left:2px;bottom:10px}.hy-th.wand{left:50%}.hy-th .knopf{width:34px;height:34px}.hy-th .knopf svg{width:34px;height:34px}.hy-stapel{display:none}.hy-th{left:2px}.hy-vt{right:2px}.hy-vt .ring,.hy-vt .ring svg{width:30px;height:30px}.hy-raum .hy-rk{font-size:.7rem;padding-right:10px}.hy-stat{font-size:.6rem;padding:1px 4px}.hy-info{margin:3px 3px 0;padding:3px 4px}.hy-geb{padding:0 5px}.hy-stock{grid-template-columns:16px repeat(4,minmax(0,1fr));gap:4px}.hy-decke{grid-template-columns:16px repeat(4,minmax(0,1fr));gap:4px;margin:0 -5px;padding:0 5px}.hy-keller svg{width:180px}}' +
+  '@media (max-width:560px){.hy-fen,.hy-moebel,.hy-m2,.hy-raum .hy-kl{display:none}.hy-raum{min-height:140px}.hy-szene{height:74px}.hy-hz{transform:scale(.6);transform-origin:left bottom;bottom:16px;left:2px}.hy-szene .hy-zu{left:37px;height:18px}.hy-szene .hy-ab{left:3px;height:24px}.hy-vt{left:28px;bottom:16px}.hy-vt .ring,.hy-vt .ring svg{width:26px!important;height:26px!important}.hy-raum .hy-gr{font-size:.95rem}.hy-th{left:27px;bottom:43px}.hy-th .knopf{width:28px;height:28px}.hy-th .knopf svg{width:28px;height:28px}.hy-stapel{display:none}.hy-vt .ring,.hy-vt .ring svg{width:30px;height:30px}.hy-raum .hy-rk{font-size:.7rem;padding-right:10px}.hy-stat{font-size:.6rem;padding:1px 4px}.hy-info{margin:3px 3px 0;padding:3px 4px}.hy-geb{padding:0 5px}.hy-stock{grid-template-columns:16px repeat(4,minmax(0,1fr));gap:4px}.hy-decke{grid-template-columns:16px repeat(4,minmax(0,1fr));gap:4px;margin:0 -5px;padding:0 5px}.hy-keller svg{width:180px}}' +
   '.hy-balken{position:relative;height:12px;border-radius:6px;background:#e5e7eb;overflow:hidden}' +
   '.hy-balken i{position:absolute;left:0;top:0;bottom:0;background:#475569}.hy-balken b{position:absolute;top:0;bottom:0;left:45%;width:10%;background:rgba(22,163,74,.45);border-left:2px solid #16a34a;border-right:2px solid #16a34a}' +
   '.hy-panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}' +
@@ -180,7 +180,7 @@ function hausFrei() {
   '.hy-prot .hy-ja{color:var(--ok);font-weight:700}.hy-prot .hy-nein{color:var(--bad);font-weight:700}' +
   '.hy-soll input{width:6em;min-height:40px;font:inherit}' +
   '.hy-tafel{width:100%;max-width:1150px;margin:auto;padding:0}.hy-tafel .hy-leiste,.hy-tafel .hy-panel,.hy-tafel .hy-legende{display:none}.hy-tafel .hy-main{grid-template-columns:1fr}' +
-  '.hy-tafel .hy-raum{min-height:205px}.hy-tafel .hy-raum .hy-gr{font-size:2rem}.hy-tafel .hy-raum .hy-rk{font-size:1rem}.hy-tafel .hy-raum .hy-kl{font-size:.85rem}.hy-tafel .hy-stat{font-size:.85rem}.hy-tafel .hy-keller .hy-ger{font-size:1.15rem}' +
+  '.hy-tafel .hy-raum{min-height:240px}.hy-tafel .hy-raum .hy-gr{font-size:2rem}.hy-tafel .hy-raum .hy-rk{font-size:1rem}.hy-tafel .hy-raum .hy-kl{font-size:.85rem}.hy-tafel .hy-stat{font-size:.85rem}.hy-tafel .hy-keller .hy-ger{font-size:1.15rem}' +
   '.hy-bilanz{width:100%;max-width:1100px;margin:auto;border-collapse:collapse;font-size:1.6rem;background:var(--card)}.hy-bilanz th,.hy-bilanz td{border:2px solid var(--line);padding:14px 18px;text-align:center}.hy-bilanz th:first-child,.hy-bilanz td:first-child{text-align:left}.hy-bilanz td.zu{color:var(--muted)}.hy-bilanz .gut{color:var(--ok);font-weight:800}.hy-bilanz .schlecht{color:var(--bad);font-weight:800}' +
   '.hy-legende{font-size:.78rem;color:var(--ink-soft);margin-top:4px}';
   var s = document.createElement('style'); s.textContent = css; document.head.appendChild(s);
@@ -236,15 +236,15 @@ function hyFenster() {
   return '<svg class="hy-fen" width="34" height="26" viewBox="0 0 34 26"><rect x="1" y="1" width="32" height="24" rx="1" fill="#fff" stroke="#78716c"/><rect x="3.5" y="3.5" width="12.5" height="19" fill="#bae6fd"/><rect x="18" y="3.5" width="12.5" height="19" fill="#bae6fd"/><path d="M5 6 l6 -0 M20 6 l5 0" stroke="#fff" stroke-width="1.5" opacity=".8"/></svg>';
 }
 function hyHeizflaeche(r, w, kopfAb) {
-  var f = hyMisch(w), kopf = '<rect x="44" y="15" width="7" height="6" fill="#9ca3af" stroke="#6b7280" stroke-width=".5"/>';   // Ventilunterteil; der Kopf ist das Bedienelement
+  var f = hyMisch(w);
   if (r.heiz === 'fbh') return '';   // Heizung im Boden, Raumthermostat an der Wand (Bedienelement)
   if (r.heiz === 'bhk')
     return '<svg class="hy-hz" width="58" height="46" viewBox="0 0 58 46"><rect x="8" y="2" width="4" height="36" fill="' + f + '" stroke="#6b7280" stroke-width=".6"/><rect x="34" y="2" width="4" height="36" fill="' + f + '" stroke="#6b7280" stroke-width=".6"/>' +
       [5, 11, 17, 23, 29, 35].map(function (y) { return '<rect x="8" y="' + y + '" width="30" height="3" fill="' + f + '" stroke="#6b7280" stroke-width=".4"/>'; }).join('') +
-      '<path d="M10 38 v8" stroke="#dc2626" stroke-width="2"/><path d="M36 38 v8" stroke="#2563eb" stroke-width="2"/>' + kopf.replace(/x="44"/, 'x="40"').replace(/x="48"/, 'x="44"').replace(/x="45"/, 'x="41"') + '</svg>';
+      '</svg>';
   return '<svg class="hy-hz" width="58" height="40" viewBox="0 0 58 40"><rect x="2" y="6" width="42" height="24" rx="2" fill="' + f + '" stroke="#6b7280"/>' +
     [7, 12, 17, 22, 27, 32, 37].map(function (x) { return '<line x1="' + x + '" y1="8" x2="' + x + '" y2="28" stroke="rgba(0,0,0,.18)"/>'; }).join('') +
-    '<path d="M44 18 h4 v22" fill="none" stroke="#dc2626" stroke-width="2"/><path d="M6 30 v10" stroke="#2563eb" stroke-width="2"/>' + kopf + '</svg>';
+    '</svg>';
 }
 function hyBoden(r, w) {
   var fliese = r.art === 'bad' || r.art === 'kueche' || r.art === 'flur';
@@ -300,18 +300,18 @@ function hausSimulator(box, api, o) {
     if (modus === 'messung') return !bekannt(i) ? '' : e.x < 0.9 ? 'hy-zuwenig' : e.x > 1.1 ? 'hy-zuviel' : 'hy-gut';
     return e.T < e.Td - 0.6 ? 'hy-kalt' : e.T > e.Td + 0.8 ? 'hy-warm' : 'hy-gut';
   }
-  function dauer(V) { return V > 0.5 ? Math.max(0.25, Math.min(8, 120 / V)).toFixed(2) + 's' : '0s'; }
-  function dicke(V) { return Math.round(Math.max(3, Math.min(7, 2 + V / 60))); }
+  function dauer(V) { return V > 0.5 ? Math.max(0.15, Math.min(6, 60 / V)).toFixed(2) + 's' : '0s'; }
+  function dicke(V) { return Math.round(Math.max(5, Math.min(11, 4 + V / 35))); }
   function rohr(art, richtung, V, pos) {   // fließendes Wasser: Tempo und Dicke nach Volumenstrom
     var st = {};
     Object.keys(pos).forEach(function (k) { st[k] = pos[k]; });
-    if (richtung === 'h') st.height = dicke(V) + 'px'; else st.width = dicke(V) + 'px';
+    if (richtung === 'h') st.height = dicke(V) + 'px'; else if (!st.width) st.width = dicke(V) + 'px';
     var r = E('span', { class: 'hy-rohr ' + art + ' ' + richtung + (V > 0.5 ? '' : ' still'), style: st });
     r.style.setProperty('--d', dauer(V));
     return r;
   }
   function strang(V, label) {
-    var d = E('div', { class: 'hy-strang', 'aria-hidden': 'true' }, [rohr('vl', 'v', V, { left: '2px', top: 0, bottom: 0 }), rohr('rl', 'v', V, { left: '12px', top: 0, bottom: 0 })]);
+    var d = E('div', { class: 'hy-strang', 'aria-hidden': 'true' }, [rohr('vl', 'v', V, { left: '0', top: 0, bottom: 0, width: '10px' }), rohr('rl', 'v', V, { left: '12px', top: 0, bottom: 0, width: '10px' })]);
     if (label) d.appendChild(E('span', { class: 'hy-et', text: label }));
     return d;
   }
@@ -354,6 +354,8 @@ function hausSimulator(box, api, o) {
         kn.appendChild(info);
         var szene = E('div', { class: 'hy-szene' });
         szene.innerHTML = '<span aria-hidden="true">' + hyFenster() + hyHeizflaeche(r, waerme, modus === 'messung') + hyBoden(r, waerme) + '</span>';
+        var zu = rohr('vl', 'v', e.V, {}); zu.classList.add('hy-zu'); szene.appendChild(zu);
+        if (r.heiz !== 'fbh') { var ab = rohr('rl', 'v', e.V, {}); ab.classList.add('hy-ab'); szene.appendChild(ab); }
         szene.appendChild(thermostatImRaum(r, i, modus === 'messung'));
         szene.appendChild(ventilImRaum(r, i, modus === 'messung'));
         kn.appendChild(szene);
@@ -392,7 +394,7 @@ function hausSimulator(box, api, o) {
     if (r.vor !== alt) { wahl = i; bauenOffen = false; aenderung('vor', i); var k = hausBox.querySelector('[data-vt="' + i + '"] .' + (d > 0 ? 'auf' : 'zu')); if (k && !k.disabled) k.focus(); }
   }
   function thermostatImRaum(r, i, aus) {
-    var w = E('div', { class: 'hy-th' + (r.heiz === 'fbh' ? ' wand' : r.heiz === 'bhk' ? ' bhk' : ''), 'data-th': String(i), role: 'group', 'aria-label': L('Thermostat ', 'Thermostat ') + hyName(r) });
+    var w = E('div', { class: 'hy-th', 'data-th': String(i), role: 'group', 'aria-label': L('Thermostat ', 'Thermostat ') + hyName(r) });
     if (aus) { w.appendChild(E('span', { class: 'ab', text: L('Kopf ab', 'Kopf ab') })); return w; }
     var knopf = E('span', { class: 'knopf', title: L('Thermostat · Mausrad: drehen', 'Thermostat'), html: hyThermoKnopf(r.thermo) });
     knopf.addEventListener('click', function () { wahl = i; bauenOffen = false; aenderung('wahl', i); });
@@ -408,10 +410,10 @@ function hausSimulator(box, api, o) {
     var ring = E('span', { class: 'ring', title: L('Voreinstellung · Mausrad: drehen', 'Voreinstellung'), html: hyVentilRing(r.vor, r.heiz === 'fbh') });
     ring.addEventListener('click', function () { wahl = i; bauenOffen = false; aenderung('wahl', i); });
     ring.addEventListener('wheel', function (ev) { ev.preventDefault(); dreheVor(r, i, ev.deltaY < 0 ? 1 : -1); }, { passive: false });
+    w.appendChild(ring);
     w.appendChild(stapel(
       E('button', { type: 'button', class: 'auf', text: '+', disabled: r.vor >= 7, 'aria-label': L('Voreinstellung ' + hyName(r) + ' öffnen', 'Ventil ' + hyName(r) + ': mehr Wasser'), onclick: function () { dreheVor(r, i, 1); } }),
       E('button', { type: 'button', class: 'zu', text: '−', disabled: r.vor <= 1, 'aria-label': L('Voreinstellung ' + hyName(r) + ' drosseln', 'Ventil ' + hyName(r) + ': weniger Wasser'), onclick: function () { dreheVor(r, i, -1); } })));
-    w.appendChild(ring);
     return w;
   }
 
@@ -862,7 +864,7 @@ window.PAKET = {
   id: 'shk-hydraulischer-abgleich',
   titel: 'Im Gleichgewicht',
   untertitel: 'Hydraulischer Abgleich – du gleichst ein ganzes Haus ab',
-  version: '0.10',
+  version: '0.12',
   bestehen: 80,
   dauer: 'etwa 90 Minuten',
   welt: { thema: 'technik', kulisse: 'werkstatt', symbol: '🔥', farbe: '#586bac', farbeHell: '#e3e7f3' },   // Farben der Staatlichen Berufsschule Kaufbeuren
