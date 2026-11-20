@@ -1,4 +1,4 @@
-![BS Info München](docs/logo-bsinfo.png)
+![Staatliche Berufsschule Kaufbeuren](docs/logo-kaufbeuren.png)
 
 # SHK-Lernpakete
 

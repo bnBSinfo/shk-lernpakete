@@ -177,6 +177,17 @@ function hausFrei() {
   var s = document.createElement('style'); s.textContent = css; document.head.appendChild(s);
 })();
 
+/* ---------- Schullogo: In diesem Projekt Staatliche Berufsschule Kaufbeuren (Datei bilder/logo-bsinfo.png, Pfad fest in engine.js/pdf.js) ---------- */
+(function () {
+  var st = document.createElement('style');
+  st.textContent = '.kopf .logo .schullogo{flex:none}.kopf .logo .schullogo img{height:44px;width:auto;max-width:none}@media (max-width:560px){.kopf .logo .schullogo img{height:30px}}' +
+    '[data-thema="technik"][data-thema]{--kopf-a:#2f3b66;--kopf-b:#586bac;--accent-soft:#e3e7f3;--bg:#f3f4f8}';   // Blau der BS Kaufbeuren
+  document.head.appendChild(st);
+  function alt() { document.querySelectorAll('img[alt="BS Info München"]').forEach(function (i) { i.alt = 'Staatliche Berufsschule Kaufbeuren'; }); }
+  document.addEventListener('DOMContentLoaded', alt);
+  if (window.MutationObserver) new MutationObserver(alt).observe(document.documentElement, { childList: true, subtree: true });
+})();
+
 /* ---------- Hilfen für Anzeige ---------- */
 function hyZahl(x, n) { n = n || 0; return (Math.round(x * Math.pow(10, n)) / Math.pow(10, n)).toLocaleString('de-DE', { minimumFractionDigits: n, maximumFractionDigits: n }); }
 function hyVor(v) { return v >= 7 ? 'N' : String(v).replace('.', ','); }
@@ -739,10 +750,10 @@ window.PAKET = {
   id: 'shk-hydraulischer-abgleich',
   titel: 'Im Gleichgewicht',
   untertitel: 'Hydraulischer Abgleich – du gleichst ein ganzes Haus ab',
-  version: '0.6',
+  version: '0.7',
   bestehen: 80,
   dauer: 'etwa 90 Minuten',
-  welt: { thema: 'technik', kulisse: 'werkstatt', symbol: '🔥' },
+  welt: { thema: 'technik', kulisse: 'werkstatt', symbol: '🔥', farbe: '#586bac', farbeHell: '#e3e7f3' },   // Farben der Staatlichen Berufsschule Kaufbeuren
   figur: { name: 'Petra Lindner', rolle: 'Meisterin, Lindner Haustechnik', aussehen: { haut: 1, haare: 'braun', frisur: 'zopf', kleidung: '#c2410c' } },
   figuren: { yilmaz: { name: 'Emre Yilmaz', rolle: 'Kunde', aussehen: { haut: 2, haare: 'schwarz', frisur: 'kurz', kleidung: '#0369a1', bart: true } } },
   leitsituation: 'Willkommen bei <b>Lindner Haustechnik</b>! Heute fahren wir zu Familie Yilmaz: Oben bleibt ein Kinderzimmer kalt, obwohl der Kessel genug Wärme liefert. Der Kessel ist neu – aber <b>abgeglichen</b> hat die Anlage nie jemand. Das machst du jetzt: Raum für Raum, mit Thermostat, Voreinstellung und Pumpe. Danach wartet ein Neubau mit Fußbodenheizung.',
