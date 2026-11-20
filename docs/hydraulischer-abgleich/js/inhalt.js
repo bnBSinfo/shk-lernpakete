@@ -255,13 +255,15 @@ function hyBoden(r, w) {
   var fbh = r.heiz === 'fbh' ? '<svg viewBox="0 0 120 9" preserveAspectRatio="none"><rect width="120" height="9" fill="#d6d3d1"/><path d="M2 2 H118 V7 H2" fill="none" stroke="' + hyMisch(w) + '" stroke-width="1.6"/><path d="M2 4.5 H114" fill="none" stroke="' + hyMisch(w * 0.8) + '" stroke-width="1.6"/></svg>' : '';
   return '<span class="hy-bod' + (fliese ? ' fliese' : '') + '">' + fbh + '</span>';
 }
-function hyTempFarbe(t) {   // 30 °C blau → 45 °C violett → 55 °C rot
-  var h = 220 + Math.max(0, Math.min(1, (t - 30) / 25)) * 140;
-  return 'hsl(' + Math.round(h % 360) + ',78%,' + (t > 50 ? 46 : 50) + '%)';
+function hyTempFarbe(t, art) {   // Vorlauf: 55 °C rot … 35 °C orange · Rücklauf immer blau: kühl dunkelblau … warm hellblau
+  var k = function (x) { return Math.max(0, Math.min(1, x)); };
+  if (art === 'vl') return 'hsl(' + Math.round(k((55 - t) / 20) * 30) + ',85%,' + Math.round(46 + k((55 - t) / 20) * 4) + '%)';
+  var w = k((t - 30) / 20);
+  return 'hsl(' + Math.round(222 - w * 12) + ',80%,' + Math.round(34 + w * 24) + '%)';
 }
 function hyKellerSvg(pumpe, V, d, trl) {
   return '<svg viewBox="0 0 250 92" role="img" aria-label="Heizraum mit Kessel, Pumpe und Ausdehnungsgefäß">' +
-    '<path d="M0 22 H150" stroke="' + hyTempFarbe(55) + '" stroke-width="7"/><path d="M0 34 H130 V70" stroke="' + hyTempFarbe(trl) + '" stroke-width="7" fill="none"/><path d="M150 22 V30" stroke="' + hyTempFarbe(55) + '" stroke-width="7"/>' +
+    '<path d="M0 22 H150" stroke="' + hyTempFarbe(55, 'vl') + '" stroke-width="7"/><path d="M0 34 H130 V70" stroke="' + hyTempFarbe(trl, 'rl') + '" stroke-width="7" fill="none"/><path d="M150 22 V30" stroke="' + hyTempFarbe(55, 'vl') + '" stroke-width="7"/>' +
     '<text x="4" y="16" font-size="8" fill="#1f2937" font-weight="700">55 °C</text><text x="4" y="48" font-size="8" fill="#1f2937" font-weight="700">' + hyZahl(trl, 0) + ' °C</text>' +
     (V > 0.5 ? '<path class="hy-svgfl" style="--d:' + d + '" d="M150 30 V22 H0" stroke="rgba(255,255,255,.85)" stroke-width="2.5" fill="none"/><path class="hy-svgfl rl" style="--d:' + d + '" d="M0 34 H130 V70" stroke="rgba(255,255,255,.85)" stroke-width="2.5" fill="none"/>' : '') +
     '<circle cx="60" cy="22" r="11" fill="#1f2937"/><circle cx="60" cy="22" r="7" fill="#22c55e"/><path d="M55 22 h8 l-3 -3 M63 22 l-3 3" stroke="#fff" stroke-width="1.6" fill="none"/>' +
@@ -316,7 +318,7 @@ function hausSimulator(box, api, o) {
     st[richtung === 'h' ? 'height' : 'width'] = (dick || 8) + 'px';
     var r = E('span', { class: 'hy-rohr ' + art + ' ' + richtung + (V > 0.5 ? '' : ' still'), style: st, title: hyZahl(temp, 0) + ' °C · ' + hyZahl(V) + ' l/h' });
     r.style.setProperty('--d', dauer(V));
-    r.style.setProperty('--c', hyTempFarbe(temp));
+    r.style.setProperty('--c', hyTempFarbe(temp, art));
     return r;
   }
   function mischung(erg, plaetze) { var v = 0, t = 0; plaetze.forEach(function (i) { var e = erg.raeume[i]; if (e) { v += e.V; t += e.V * e.trl; } }); return v > 0.5 ? t / v : 20; }
@@ -389,8 +391,8 @@ function hausSimulator(box, api, o) {
     keller.appendChild(innen);
     hausBox.appendChild(E('div', { class: 'hy-erde' }, [keller]));
     hausBox.appendChild(E('div', { class: 'hy-legende', html: modus === 'messung'
-      ? L('Messung mit abgenommenen Thermostatköpfen: Nur die Voreinstellung bremst – stell sie am <b>gelben Ring am Ventil</b> (1–6, N; bei FBH violett = Verteiler) mit + und − oder dem Mausrad ein. Grünes Feld im Balken = 90–110 % vom Soll. In den Rohren wandert das Wasser: Farbe = Temperatur (rot heiß, blau kühl), schneller = mehr l/h. Ein überversorgter Raum schickt fast heißes Wasser zurück.', 'Köpfe ab: Nur der <b>gelbe Ring am Ventil</b> bremst. Dreh mit + und −. Grün = 90 bis 110 %. Schnelle Striche im Rohr = viel Wasser.')
-      : L('<b>Weißer Knopf</b> = Thermostat (✱–5) · <b>gelber Ring</b> = Voreinstellung am Ventil (1–6, N) · Rahmen blau = zu kalt · grün = angenehm · orange = zu warm · 🔊 Ventil pfeift · Heizfläche rot = viel heißes Wasser, grau = wenig · Rohrfarbe = Wassertemperatur (rot 55 °C, violett 45 °C, blau 30 °C) · Pfeile zeigen die Richtung, schneller = mehr Wasser', '<b>Weißer Knopf</b> = Thermostat · <b>gelber Ring</b> = Ventil · Blau = zu kalt · Grün = gut · Orange = zu warm · 🔊 Ventil pfeift · rote Heizung = viel Wasser') }));
+      ? L('Messung mit abgenommenen Thermostatköpfen: Nur die Voreinstellung bremst – stell sie am <b>gelben Ring am Ventil</b> (1–6, N; bei FBH violett = Verteiler) mit + und − oder dem Mausrad ein. Grünes Feld im Balken = 90–110 % vom Soll. In den Rohren wandert das Wasser: Vorlauf rot, Rücklauf blau – helles Blau = warmer Rücklauf, schneller = mehr l/h. Ein überversorgter Raum schickt warmes Wasser zurück.', 'Köpfe ab: Nur der <b>gelbe Ring am Ventil</b> bremst. Dreh mit + und −. Grün = 90 bis 110 %. Schnelle Striche im Rohr = viel Wasser.')
+      : L('<b>Weißer Knopf</b> = Thermostat (✱–5) · <b>gelber Ring</b> = Voreinstellung am Ventil (1–6, N) · Rahmen blau = zu kalt · grün = angenehm · orange = zu warm · 🔊 Ventil pfeift · Heizfläche rot = viel heißes Wasser, grau = wenig · Rohrfarbe: Vorlauf rot (55 °C), FBH-Vorlauf orange (35 °C), Rücklauf blau – je heller, desto wärmer · Pfeile zeigen die Richtung, schneller = mehr Wasser', '<b>Weißer Knopf</b> = Thermostat · <b>gelber Ring</b> = Ventil · Blau = zu kalt · Grün = gut · Orange = zu warm · 🔊 Ventil pfeift · rote Heizung = viel Wasser') }));
   }
 
   function dreheThermo(r, i, d) {
@@ -882,7 +884,7 @@ window.PAKET = {
   id: 'shk-hydraulischer-abgleich',
   titel: 'Im Gleichgewicht',
   untertitel: 'Hydraulischer Abgleich – du gleichst ein ganzes Haus ab',
-  version: '0.15',
+  version: '0.16',
   bestehen: 80,
   dauer: 'etwa 90 Minuten',
   welt: { thema: 'technik', kulisse: 'werkstatt', symbol: '🔥', farbe: '#586bac', farbeHell: '#e3e7f3' },   // Farben der Staatlichen Berufsschule Kaufbeuren
