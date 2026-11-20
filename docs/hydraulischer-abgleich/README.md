@@ -1,6 +1,6 @@
 ![Staatliche Berufsschule Kaufbeuren](bilder/logo-bsinfo.png)
 
-# Im Gleichgewicht – Hydraulischer Abgleich (SCORM 1.2, Version 0.8)
+# Im Gleichgewicht – Hydraulischer Abgleich (SCORM 1.2, Version 0.9)
 
 **Zielgruppe:** Anlagenmechaniker/-innen SHK · **Dauer:** ca. 60 min · **Gerät:** PC und Tablet · **Präfix:** `shk-`
 
@@ -28,6 +28,7 @@ Haus-Simulator: Ein Einfamilienhaus mit 2 Etagen × 4 Räumen. In jedem Raum las
 - Merkblatt mit Lückentext, Selbsttest (5 Fragen), Vorwissens-Check (5 Fragen), Lernheft mit den eigenen Abgleich-Protokollen.
 
 ## Änderungen
+- 0.9: Glossar nur in der Einzahl mit Artikel (Wunsch der Lehrkraft).
 - 0.8: Tafelbild für die Einweisung (6 Szenen, `index.html#tafel`); Ablaufplan liegt in `../hydraulischer-abgleich-lehrer/input-ablauf.md` (nicht im ZIP).
 - 0.7: Logo und Farben der Staatlichen Berufsschule Kaufbeuren (Projekt-Ausnahme vom BS-Info-Logo).
 - 0.6: Einstufung mit Empfehlung Basis/Profi; Vorführung mit Selbsterklär-Frage in Auftrag 2 und 3; Glossar mit Artikel und Plural; Satzanfänge bei Mitdenken und Reflexion; Aufträge mit fettem Operator.

@@ -833,7 +833,7 @@ window.PAKET = {
   id: 'shk-hydraulischer-abgleich',
   titel: 'Im Gleichgewicht',
   untertitel: 'Hydraulischer Abgleich – du gleichst ein ganzes Haus ab',
-  version: '0.8',
+  version: '0.9',
   bestehen: 80,
   dauer: 'etwa 90 Minuten',
   welt: { thema: 'technik', kulisse: 'werkstatt', symbol: '🔥', farbe: '#586bac', farbeHell: '#e3e7f3' },   // Farben der Staatlichen Berufsschule Kaufbeuren
@@ -918,21 +918,21 @@ window.PAKET = {
   ],
 
   glossar: [
-    { begriff: 'Hydraulischer Abgleich', erklaerung: '<i>der hydraulische Abgleich, die hydraulischen Abgleiche</i> – Alle Heizflächen werden so eingestellt, dass jede genau so viel Heizwasser bekommt, wie sie braucht.', vorab: true },
-    { begriff: 'Volumenstrom', erklaerung: '<i>der Volumenstrom, die Volumenströme</i> – So viel Heizwasser fließt pro Zeit durch eine Heizfläche, in l/h.', vorab: true },
-    { begriff: 'Heizlast', erklaerung: '<i>die Heizlast, die Heizlasten</i> – So viel Wärme braucht ein Raum am kältesten Tag, in Watt (W).', vorab: true },
-    { begriff: 'Spreizung', erklaerung: '<i>die Spreizung, die Spreizungen</i> – Unterschied zwischen Vorlauf- und Rücklauftemperatur, z. B. 55/45 °C = 10 K.', vorab: true },
-    { begriff: 'Voreinstellung', erklaerung: '<i>die Voreinstellung, die Voreinstellungen</i> – Einstellring am Thermostatventil. Er begrenzt den größten Durchfluss. 1 = stark gedrosselt, N = ganz offen.', vorab: true },
-    { begriff: 'Thermostatkopf', erklaerung: '<i>der Thermostatkopf, die Thermostatköpfe</i> – Regelt die Raumtemperatur. Er öffnet oder schließt das Ventil, je nach Temperatur.' },
-    { begriff: 'Ventilhub', erklaerung: '<i>der Ventilhub, die Ventilhübe</i> – Wie weit das Ventil gerade offen ist, in Prozent.' },
-    { begriff: 'Differenzdruck', erklaerung: '<i>der Differenzdruck, die Differenzdrücke</i> – Druckunterschied vor und hinter einem Bauteil, in mbar. Hoher Differenzdruck am fast geschlossenen Ventil führt zu Pfeifen.' },
-    { begriff: 'Förderhöhe', erklaerung: '<i>die Förderhöhe, die Förderhöhen</i> – Druck, den die Heizungspumpe erzeugt, in Metern (1 m ≈ 100 mbar).', vorab: true },
+    { begriff: 'Hydraulischer Abgleich', erklaerung: '<i>der hydraulische Abgleich</i> – Alle Heizflächen werden so eingestellt, dass jede genau so viel Heizwasser bekommt, wie sie braucht.', vorab: true },
+    { begriff: 'Volumenstrom', erklaerung: '<i>der Volumenstrom</i> – So viel Heizwasser fließt pro Zeit durch eine Heizfläche, in l/h.', vorab: true },
+    { begriff: 'Heizlast', erklaerung: '<i>die Heizlast</i> – So viel Wärme braucht ein Raum am kältesten Tag, in Watt (W).', vorab: true },
+    { begriff: 'Spreizung', erklaerung: '<i>die Spreizung</i> – Unterschied zwischen Vorlauf- und Rücklauftemperatur, z. B. 55/45 °C = 10 K.', vorab: true },
+    { begriff: 'Voreinstellung', erklaerung: '<i>die Voreinstellung</i> – Einstellring am Thermostatventil. Er begrenzt den größten Durchfluss. 1 = stark gedrosselt, N = ganz offen.', vorab: true },
+    { begriff: 'Thermostatkopf', erklaerung: '<i>der Thermostatkopf</i> – Regelt die Raumtemperatur. Er öffnet oder schließt das Ventil, je nach Temperatur.' },
+    { begriff: 'Ventilhub', erklaerung: '<i>der Ventilhub</i> – Wie weit das Ventil gerade offen ist, in Prozent.' },
+    { begriff: 'Differenzdruck', erklaerung: '<i>der Differenzdruck</i> – Druckunterschied vor und hinter einem Bauteil, in mbar. Hoher Differenzdruck am fast geschlossenen Ventil führt zu Pfeifen.' },
+    { begriff: 'Förderhöhe', erklaerung: '<i>die Förderhöhe</i> – Druck, den die Heizungspumpe erzeugt, in Metern (1 m ≈ 100 mbar).', vorab: true },
     { begriff: 'Δp-konstant', erklaerung: '<i>Regelart der Pumpe, gesprochen „Delta p konstant“</i> – Regelart der Pumpe: Sie hält die eingestellte Förderhöhe konstant.' },
-    { begriff: 'Unterversorgung', erklaerung: '<i>die Unterversorgung, ohne Plural</i> – Ein Raum bekommt weniger Heizwasser, als er braucht. Er wird nicht warm.' },
-    { begriff: 'Überversorgung', erklaerung: '<i>die Überversorgung, ohne Plural</i> – Ein Raum bekommt mehr Heizwasser, als er braucht. Das Wasser fehlt anderen Räumen.' },
-    { begriff: 'Ungünstigster Raum', erklaerung: '<i>der ungünstigste Raum, die ungünstigsten Räume</i> – Der Raum, der bei Soll-Volumenstrom den größten Druckverlust hat – meist der am weitesten entfernte. Er bestimmt die nötige Förderhöhe.' },
-    { begriff: 'Heizkreisverteiler', erklaerung: '<i>der Heizkreisverteiler, die Heizkreisverteiler</i> – Verteilt bei der Fußbodenheizung das Heizwasser auf die einzelnen Heizkreise.' },
-    { begriff: 'Durchflussmesser', erklaerung: '<i>der Durchflussmesser, die Durchflussmesser</i> – Anzeige am Heizkreisverteiler. Zeigt den Volumenstrom eines Heizkreises, meist in l/min.' }
+    { begriff: 'Unterversorgung', erklaerung: '<i>die Unterversorgung</i> – Ein Raum bekommt weniger Heizwasser, als er braucht. Er wird nicht warm.' },
+    { begriff: 'Überversorgung', erklaerung: '<i>die Überversorgung</i> – Ein Raum bekommt mehr Heizwasser, als er braucht. Das Wasser fehlt anderen Räumen.' },
+    { begriff: 'Ungünstigster Raum', erklaerung: '<i>der ungünstigste Raum</i> – Der Raum, der bei Soll-Volumenstrom den größten Druckverlust hat – meist der am weitesten entfernte. Er bestimmt die nötige Förderhöhe.' },
+    { begriff: 'Heizkreisverteiler', erklaerung: '<i>der Heizkreisverteiler</i> – Verteilt bei der Fußbodenheizung das Heizwasser auf die einzelnen Heizkreise.' },
+    { begriff: 'Durchflussmesser', erklaerung: '<i>der Durchflussmesser</i> – Anzeige am Heizkreisverteiler. Zeigt den Volumenstrom eines Heizkreises, meist in l/min.' }
   ],
 
   fragen: [
