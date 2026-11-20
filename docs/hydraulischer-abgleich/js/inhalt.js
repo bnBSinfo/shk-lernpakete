@@ -56,12 +56,14 @@ var HY = (function () {
       T = (lo + hi) / 2; schritt(T);
     }
     var dpv = isFinite(rv) ? V * V * rv : H;
-    return { V: V, vs: vs, x: x, h: h, T: T, Td: Td, dpv: dpv, pfeift: !koepfeAb && h < 0.35 && dpv > 150 };
+    var Hz = HEIZ[r.heiz], Q = heizlast(r) * qr(x, Hz.a), trl = V > 0.5 ? Math.max(T, Hz.vl - Q / (1.163 * V)) : T;   // Rücklauf: Vorlauf minus abgegebene Wärme
+    return { V: V, vs: vs, x: x, h: h, T: T, Td: Td, dpv: dpv, tvl: Hz.vl, trl: trl, pfeift: !koepfeAb && h < 0.35 && dpv > 150 };
   }
   function rechne(haus, koepfeAb) {
     var H = haus.pumpe * 100, Vt = 0;
     var raeume = haus.plaetze.map(function (r, i) { if (!r) return null; var e = zweig(r, i, H, koepfeAb); Vt += e.V; return e; });
-    return { raeume: raeume, H: H, V: Vt, watt: Vt ? Math.round(3 + H * 100 * Vt / 3.6e6 / 0.3) : 0 };
+    var mix = 0; raeume.forEach(function (e) { if (e) mix += e.V * e.trl; });
+    return { raeume: raeume, H: H, V: Vt, trl: Vt > 0.5 ? mix / Vt : 20, watt: Vt ? Math.round(3 + H * 100 * Vt / 3.6e6 / 0.3) : 0 };
   }
   function noetigePumpe(haus) {
     var n = 0;
@@ -123,9 +125,11 @@ function hausFrei() {
   '.hy-strang .hy-et{position:absolute;top:2px;left:-6px;right:-6px;text-align:center;font-size:.68rem;font-weight:800;background:#fff;border:1px solid #57534e;border-radius:6px;color:#44403c}' +
   '.hy-decke{display:grid;grid-template-columns:22px repeat(4,minmax(0,1fr));gap:6px;height:28px;margin:0 -10px;padding:0 10px;background:radial-gradient(#6b7280 1px,transparent 1.5px) 0 0/6px 6px,#9ca3af;border-top:1px solid #4b5563;border-bottom:1px solid #4b5563}' +
   '.hy-decke > div{position:relative}' +
+  '.hy-dachboden{display:grid;grid-template-columns:22px 1fr;gap:6px;height:30px;margin:0 -10px;padding:0 10px;background:radial-gradient(#6b7280 1px,transparent 1.5px) 0 0/6px 6px,#9ca3af;border-top:1px solid #4b5563;border-bottom:1px solid #4b5563;position:relative}' +
+  '.hy-dachboden .hy-strang{margin-top:6px}.hy-entl{position:absolute;left:10px;top:0;width:22px;height:8px;border-radius:3px 3px 0 0;background:linear-gradient(90deg,#6b7280 0 9px,transparent 9px 11px,#6b7280 11px)}' +
   '.hy-rohr{position:absolute;border-radius:4px;box-shadow:0 0 0 1px rgba(0,0,0,.25);animation-duration:var(--d,2s);animation-timing-function:linear;animation-iteration-count:infinite}' +
-  '.hy-rohr.vl.h{background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2210%22%3E%3Crect width=%2216%22 height=%2210%22 fill=%22%23dc2626%22/%3E%3Cpath d=%22M5 2 L10 5 L5 8%22 fill=%22none%22 stroke=%22white%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E") 0 0/16px 100% repeat-x;animation-name:hy-r}.hy-rohr.rl.h{background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2210%22%3E%3Crect width=%2216%22 height=%2210%22 fill=%22%232563eb%22/%3E%3Cpath d=%22M11 2 L6 5 L11 8%22 fill=%22none%22 stroke=%22white%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E") 0 0/16px 100% repeat-x;animation-name:hy-l}' +
-  '.hy-rohr.vl.v{background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%2216%22%3E%3Crect width=%2210%22 height=%2216%22 fill=%22%23dc2626%22/%3E%3Cpath d=%22M2 11 L5 6 L8 11%22 fill=%22none%22 stroke=%22white%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E") 0 0/100% 16px repeat-y;animation-name:hy-o}.hy-rohr.rl.v{background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%2216%22%3E%3Crect width=%2210%22 height=%2216%22 fill=%22%232563eb%22/%3E%3Cpath d=%22M2 5 L5 10 L8 5%22 fill=%22none%22 stroke=%22white%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E") 0 0/100% 16px repeat-y;animation-name:hy-u}' +
+  '.hy-rohr.vl.h{background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2210%22%3E%3Cpath d=%22M5 2 L10 5 L5 8%22 fill=%22none%22 stroke=%22white%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E") 0 0/16px 100% repeat-x,var(--c,#dc2626);animation-name:hy-r}.hy-rohr.rl.h{background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2210%22%3E%3Cpath d=%22M11 2 L6 5 L11 8%22 fill=%22none%22 stroke=%22white%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E") 0 0/16px 100% repeat-x,var(--c,#2563eb);animation-name:hy-l}' +
+  '.hy-rohr.vl.v{background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%2216%22%3E%3Cpath d=%22M2 11 L5 6 L8 11%22 fill=%22none%22 stroke=%22white%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E") 0 0/100% 16px repeat-y,var(--c,#dc2626);animation-name:hy-o}.hy-rohr.rl.v{background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%2216%22%3E%3Cpath d=%22M2 5 L5 10 L8 5%22 fill=%22none%22 stroke=%22white%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E") 0 0/100% 16px repeat-y,var(--c,#2563eb);animation-name:hy-u}' +
   '.hy-rohr.still{animation:none;opacity:.3;filter:grayscale(1)}' +
   '@keyframes hy-r{to{background-position:16px 0}}@keyframes hy-l{to{background-position:-16px 0}}@keyframes hy-o{to{background-position:0 -16px}}@keyframes hy-u{to{background-position:0 16px}}' +
   '.hy-svgfl{stroke-dasharray:9 7;animation:hy-dl var(--d,2s) linear infinite}.hy-svgfl.rl{animation-name:hy-dr}@keyframes hy-dl{to{stroke-dashoffset:16}}@keyframes hy-dr{to{stroke-dashoffset:-16}}' +
@@ -160,12 +164,12 @@ function hausFrei() {
   '.hy-raum.hy-warm,.hy-raum.hy-zuviel{border-color:#ea580c;box-shadow:inset 0 0 0 999px rgba(249,115,22,.16)}.hy-raum.hy-gut{border-color:#16a34a}' +
   '.hy-kalt .hy-stat{background:#2563eb;color:#fff}.hy-zuwenig .hy-stat{background:#dc2626;color:#fff}.hy-warm .hy-stat,.hy-zuviel .hy-stat{background:#c2410c;color:#fff}.hy-gut .hy-stat{background:#15803d;color:#fff}' +
   '.hy-raum .hy-pf{position:absolute;right:4px;top:3px;font-size:.95rem}' +
-  '.hy-szene{position:relative;height:110px;flex:none}.hy-szene .hy-rohr{z-index:1}.hy-szene .hy-zu{left:61px;bottom:0;height:27px}.hy-szene .hy-ab{left:6px;bottom:0;height:34px}' +
+  '.hy-szene{position:relative;height:110px;flex:none}.hy-szene .hy-rohr{z-index:1}.hy-szene .hy-zu{left:63px;bottom:0;height:27px}.hy-szene .hy-ab{left:6px;bottom:0;height:34px}' +
   '.hy-fen{position:absolute;right:8px;top:4px}.hy-hz{position:absolute;left:4px;bottom:22px;z-index:2}.hy-moebel{position:absolute;right:6px;bottom:8px;font-size:1.7rem;line-height:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,.25))}' +
   '.hy-bod{position:absolute;left:0;right:0;bottom:0;height:9px;background:repeating-linear-gradient(90deg,#c2803a 0 22px,#92400e 22px 23px),#c2803a}' +
   '.hy-bod.fliese{background:repeating-linear-gradient(90deg,#e5e7eb 0 13px,#9ca3af 13px 14px)}' +
   '.hy-bod svg{position:absolute;inset:0;width:100%;height:100%}' +
-  '@media (max-width:560px){.hy-fen,.hy-moebel,.hy-m2,.hy-raum .hy-kl{display:none}.hy-raum{min-height:140px}.hy-szene{height:74px}.hy-hz{transform:scale(.6);transform-origin:left bottom;bottom:16px;left:2px}.hy-szene .hy-zu{left:37px;height:18px}.hy-szene .hy-ab{left:3px;height:24px}.hy-vt{left:28px;bottom:16px}.hy-vt .ring,.hy-vt .ring svg{width:26px!important;height:26px!important}.hy-raum .hy-gr{font-size:.95rem}.hy-th{left:27px;bottom:43px}.hy-th .knopf{width:28px;height:28px}.hy-th .knopf svg{width:28px;height:28px}.hy-stapel{display:none}.hy-vt .ring,.hy-vt .ring svg{width:30px;height:30px}.hy-raum .hy-rk{font-size:.7rem;padding-right:10px}.hy-stat{font-size:.6rem;padding:1px 4px}.hy-info{margin:3px 3px 0;padding:3px 4px}.hy-geb{padding:0 5px}.hy-stock{grid-template-columns:16px repeat(4,minmax(0,1fr));gap:4px}.hy-decke{grid-template-columns:16px repeat(4,minmax(0,1fr));gap:4px;margin:0 -5px;padding:0 5px}.hy-keller svg{width:180px}}' +
+  '@media (max-width:560px){.hy-fen,.hy-moebel,.hy-m2,.hy-raum .hy-kl{display:none}.hy-raum{min-height:140px}.hy-szene{height:74px}.hy-hz{transform:scale(.6);transform-origin:left bottom;bottom:16px;left:2px}.hy-szene .hy-zu{left:37px;height:18px}.hy-szene .hy-ab{left:3px;height:24px}.hy-vt{left:28px;bottom:16px}.hy-vt .ring,.hy-vt .ring svg{width:26px!important;height:26px!important}.hy-raum .hy-gr{font-size:.95rem}.hy-th{left:27px;bottom:43px}.hy-th .knopf{width:28px;height:28px}.hy-th .knopf svg{width:28px;height:28px}.hy-stapel{display:none}.hy-vt .ring,.hy-vt .ring svg{width:30px;height:30px}.hy-raum .hy-rk{font-size:.7rem;padding-right:10px}.hy-stat{font-size:.6rem;padding:1px 4px}.hy-info{margin:3px 3px 0;padding:3px 4px}.hy-geb{padding:0 5px}.hy-stock{grid-template-columns:16px repeat(4,minmax(0,1fr));gap:4px}.hy-decke{grid-template-columns:16px repeat(4,minmax(0,1fr));gap:4px;margin:0 -5px;padding:0 5px}.hy-dachboden{grid-template-columns:16px 1fr;gap:4px;margin:0 -5px;padding:0 5px}.hy-entl{left:5px}.hy-keller svg{width:180px}}' +
   '.hy-balken{position:relative;height:12px;border-radius:6px;background:#e5e7eb;overflow:hidden}' +
   '.hy-balken i{position:absolute;left:0;top:0;bottom:0;background:#475569}.hy-balken b{position:absolute;top:0;bottom:0;left:45%;width:10%;background:rgba(22,163,74,.45);border-left:2px solid #16a34a;border-right:2px solid #16a34a}' +
   '.hy-panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}' +
@@ -251,10 +255,15 @@ function hyBoden(r, w) {
   var fbh = r.heiz === 'fbh' ? '<svg viewBox="0 0 120 9" preserveAspectRatio="none"><rect width="120" height="9" fill="#d6d3d1"/><path d="M2 2 H118 V7 H2" fill="none" stroke="' + hyMisch(w) + '" stroke-width="1.6"/><path d="M2 4.5 H114" fill="none" stroke="' + hyMisch(w * 0.8) + '" stroke-width="1.6"/></svg>' : '';
   return '<span class="hy-bod' + (fliese ? ' fliese' : '') + '">' + fbh + '</span>';
 }
-function hyKellerSvg(pumpe, V, d) {
+function hyTempFarbe(t) {   // 30 °C blau → 45 °C violett → 55 °C rot
+  var h = 220 + Math.max(0, Math.min(1, (t - 30) / 25)) * 140;
+  return 'hsl(' + Math.round(h % 360) + ',78%,' + (t > 50 ? 46 : 50) + '%)';
+}
+function hyKellerSvg(pumpe, V, d, trl) {
   return '<svg viewBox="0 0 250 92" role="img" aria-label="Heizraum mit Kessel, Pumpe und Ausdehnungsgefäß">' +
-    '<path d="M0 22 H150" stroke="#dc2626" stroke-width="5"/><path d="M0 34 H130 V70" stroke="#2563eb" stroke-width="5" fill="none"/><path d="M150 22 V30" stroke="#dc2626" stroke-width="5"/>' +
-    (V > 0.5 ? '<path class="hy-svgfl" style="--d:' + d + '" d="M150 30 V22 H0" stroke="#fca5a5" stroke-width="2.5" fill="none"/><path class="hy-svgfl rl" style="--d:' + d + '" d="M0 34 H130 V70" stroke="#93c5fd" stroke-width="2.5" fill="none"/>' : '') +
+    '<path d="M0 22 H150" stroke="' + hyTempFarbe(55) + '" stroke-width="7"/><path d="M0 34 H130 V70" stroke="' + hyTempFarbe(trl) + '" stroke-width="7" fill="none"/><path d="M150 22 V30" stroke="' + hyTempFarbe(55) + '" stroke-width="7"/>' +
+    '<text x="4" y="16" font-size="8" fill="#1f2937" font-weight="700">55 °C</text><text x="4" y="48" font-size="8" fill="#1f2937" font-weight="700">' + hyZahl(trl, 0) + ' °C</text>' +
+    (V > 0.5 ? '<path class="hy-svgfl" style="--d:' + d + '" d="M150 30 V22 H0" stroke="rgba(255,255,255,.85)" stroke-width="2.5" fill="none"/><path class="hy-svgfl rl" style="--d:' + d + '" d="M0 34 H130 V70" stroke="rgba(255,255,255,.85)" stroke-width="2.5" fill="none"/>' : '') +
     '<circle cx="60" cy="22" r="11" fill="#1f2937"/><circle cx="60" cy="22" r="7" fill="#22c55e"/><path d="M55 22 h8 l-3 -3 M63 22 l-3 3" stroke="#fff" stroke-width="1.6" fill="none"/>' +
     '<text x="60" y="49" font-size="9" text-anchor="middle" fill="#1f2937" font-weight="700">' + L('Pumpe', 'Pumpe') + ' ' + hyZahl(pumpe, 1) + ' m</text>' +
     '<rect x="96" y="40" width="18" height="34" rx="9" fill="#dc2626"/><path d="M105 40 v-6" stroke="#2563eb" stroke-width="3"/><text x="105" y="86" font-size="8" text-anchor="middle" fill="#1f2937">MAG</text>' +
@@ -301,17 +310,18 @@ function hausSimulator(box, api, o) {
     return e.T < e.Td - 0.6 ? 'hy-kalt' : e.T > e.Td + 0.8 ? 'hy-warm' : 'hy-gut';
   }
   function dauer(V) { return V > 0.5 ? Math.max(0.15, Math.min(6, 60 / V)).toFixed(2) + 's' : '0s'; }
-  function dicke(V) { return Math.round(Math.max(5, Math.min(11, 4 + V / 35))); }
-  function rohr(art, richtung, V, pos) {   // fließendes Wasser: Tempo und Dicke nach Volumenstrom
+  function rohr(art, richtung, V, pos, temp, dick) {   // fließendes Wasser: Tempo nach Volumenstrom, Farbe nach Temperatur, Dicke nach Leitungsart
     var st = {};
     Object.keys(pos).forEach(function (k) { st[k] = pos[k]; });
-    if (richtung === 'h') st.height = dicke(V) + 'px'; else if (!st.width) st.width = dicke(V) + 'px';
-    var r = E('span', { class: 'hy-rohr ' + art + ' ' + richtung + (V > 0.5 ? '' : ' still'), style: st });
+    st[richtung === 'h' ? 'height' : 'width'] = (dick || 8) + 'px';
+    var r = E('span', { class: 'hy-rohr ' + art + ' ' + richtung + (V > 0.5 ? '' : ' still'), style: st, title: hyZahl(temp, 0) + ' °C · ' + hyZahl(V) + ' l/h' });
     r.style.setProperty('--d', dauer(V));
+    r.style.setProperty('--c', hyTempFarbe(temp));
     return r;
   }
-  function strang(V, label) {
-    var d = E('div', { class: 'hy-strang', 'aria-hidden': 'true' }, [rohr('vl', 'v', V, { left: '0', top: 0, bottom: 0, width: '10px' }), rohr('rl', 'v', V, { left: '12px', top: 0, bottom: 0, width: '10px' })]);
+  function mischung(erg, plaetze) { var v = 0, t = 0; plaetze.forEach(function (i) { var e = erg.raeume[i]; if (e) { v += e.V; t += e.V * e.trl; } }); return v > 0.5 ? t / v : 20; }
+  function strang(V, label, trl) {
+    var d = E('div', { class: 'hy-strang', 'aria-hidden': 'true' }, [rohr('vl', 'v', V, { left: '1px', top: 0, bottom: 0 }, 55), rohr('rl', 'v', V, { left: '12px', top: 0, bottom: 0 }, trl)]);
     if (label) d.appendChild(E('span', { class: 'hy-et', text: label }));
     return d;
   }
@@ -321,9 +331,11 @@ function hausSimulator(box, api, o) {
     hausBox.innerHTML = '<span class="hy-wolke" style="left:8%" aria-hidden="true"></span><span class="hy-wolke" style="left:78%;top:26px" aria-hidden="true"></span>' +
       '<div class="hy-dachz" aria-hidden="true"><span class="kamin"></span><span class="flaeche"></span><span class="luke"></span></div>';
     var geb = E('div', { class: 'hy-geb' });
+    var dach = E('div', { class: 'hy-dachboden', 'aria-hidden': 'true' }, [strang(summe(erg, [4, 5, 6, 7]), null, mischung(erg, [4, 5, 6, 7])), E('span', { class: 'hy-entl', title: L('Entlüfter', 'Entlüfter') })]);
+    geb.appendChild(dach);
     [['OG', [4, 5, 6, 7]], ['EG', [0, 1, 2, 3]]].forEach(function (st, n) {
-      var Vstrang = n === 0 ? summe(erg, [4, 5, 6, 7]) : erg.V;
-      var reihe = E('div', { class: 'hy-stock' }, [strang(Vstrang, st[0])]);
+      var Vstrang = n === 0 ? summe(erg, [4, 5, 6, 7]) : erg.V, Tstrang = n === 0 ? mischung(erg, [4, 5, 6, 7]) : erg.trl;
+      var reihe = E('div', { class: 'hy-stock' }, [strang(Vstrang, st[0], Tstrang)]);
       st[1].forEach(function (i) {
         var r = haus.plaetze[i], e = erg.raeume[i];
         if (!r) {
@@ -354,32 +366,32 @@ function hausSimulator(box, api, o) {
         kn.appendChild(info);
         var szene = E('div', { class: 'hy-szene' });
         szene.innerHTML = '<span aria-hidden="true">' + hyFenster() + hyHeizflaeche(r, waerme, modus === 'messung') + hyBoden(r, waerme) + '</span>';
-        var zu = rohr('vl', 'v', e.V, {}); zu.classList.add('hy-zu'); szene.appendChild(zu);
-        if (r.heiz !== 'fbh') { var ab = rohr('rl', 'v', e.V, {}); ab.classList.add('hy-ab'); szene.appendChild(ab); }
+        var zu = rohr('vl', 'v', e.V, {}, e.tvl, 6); zu.classList.add('hy-zu'); szene.appendChild(zu);
+        if (r.heiz !== 'fbh') { var ab = rohr('rl', 'v', e.V, {}, e.trl, 6); ab.classList.add('hy-ab'); szene.appendChild(ab); }
         szene.appendChild(thermostatImRaum(r, i, modus === 'messung'));
         szene.appendChild(ventilImRaum(r, i, modus === 'messung'));
         kn.appendChild(szene);
         reihe.appendChild(kn);
       });
       geb.appendChild(reihe);
-      geb.appendChild(E('div', { class: 'hy-decke', 'aria-hidden': 'true' }, [strang(Vstrang)].concat(st[1].map(function (i) {
-        var V = erg.raeume[i] ? erg.raeume[i].V : 0, seg = E('div');
-        if (haus.plaetze[i]) { seg.appendChild(rohr('vl', 'h', V, { left: '-6px', right: 0, top: '2px' })); seg.appendChild(rohr('rl', 'h', V, { left: '-6px', right: 0, bottom: '2px' })); }
+      geb.appendChild(E('div', { class: 'hy-decke', 'aria-hidden': 'true' }, [strang(Vstrang, null, Tstrang)].concat(st[1].map(function (i) {
+        var e = erg.raeume[i], V = e ? e.V : 0, seg = E('div');
+        if (haus.plaetze[i]) { seg.appendChild(rohr('vl', 'h', V, { left: '-6px', right: 0, top: '4px' }, e.tvl)); seg.appendChild(rohr('rl', 'h', V, { left: '-6px', right: 0, bottom: '4px' }, e.trl)); }
         return seg;
       }))));
     });
     hausBox.appendChild(geb);
     hausBox.appendChild(E('div', { class: 'hy-gras', 'aria-hidden': 'true' }));
-    var keller = E('div', { class: 'hy-keller' }, [strang(erg.V, 'KG')]);
+    var keller = E('div', { class: 'hy-keller' }, [strang(erg.V, 'KG', erg.trl)]);
     var innen = E('div', { class: 'innen' });
-    innen.innerHTML = hyKellerSvg(haus.pumpe, erg.V, dauer(erg.V));
+    innen.innerHTML = hyKellerSvg(haus.pumpe, erg.V, dauer(erg.V), erg.trl);
     innen.appendChild(E('span', { class: 'hy-ger', text: '🔥 ' + L('Kessel, Vorlauf 55 °C', 'Kessel 55 °C') }));
     innen.appendChild(E('span', { class: 'hy-ger', text: '⚙️ ' + L('Pumpe ', 'Pumpe ') + hyZahl(haus.pumpe, 1) + ' m · ' + hyZahl(erg.V) + ' l/h · ≈ ' + erg.watt + ' W' }));
     keller.appendChild(innen);
     hausBox.appendChild(E('div', { class: 'hy-erde' }, [keller]));
     hausBox.appendChild(E('div', { class: 'hy-legende', html: modus === 'messung'
-      ? L('Messung mit abgenommenen Thermostatköpfen: Nur die Voreinstellung bremst – stell sie am <b>gelben Ring am Ventil</b> (1–6, N; bei FBH violett = Verteiler) mit + und − oder dem Mausrad ein. Grünes Feld im Balken = 90–110 % vom Soll. In den Rohren wandert das Wasser: rot Vorlauf, blau Rücklauf – je schneller und dicker, desto mehr l/h.', 'Köpfe ab: Nur der <b>gelbe Ring am Ventil</b> bremst. Dreh mit + und −. Grün = 90 bis 110 %. Schnelle Striche im Rohr = viel Wasser.')
-      : L('<b>Weißer Knopf</b> = Thermostat (✱–5) · <b>gelber Ring</b> = Voreinstellung am Ventil (1–6, N) · Rahmen blau = zu kalt · grün = angenehm · orange = zu warm · 🔊 Ventil pfeift · Heizfläche rot = viel heißes Wasser, grau = wenig · Rohre: rot Vorlauf, blau Rücklauf – je schneller die Striche, desto mehr Wasser', '<b>Weißer Knopf</b> = Thermostat · <b>gelber Ring</b> = Ventil · Blau = zu kalt · Grün = gut · Orange = zu warm · 🔊 Ventil pfeift · rote Heizung = viel Wasser') }));
+      ? L('Messung mit abgenommenen Thermostatköpfen: Nur die Voreinstellung bremst – stell sie am <b>gelben Ring am Ventil</b> (1–6, N; bei FBH violett = Verteiler) mit + und − oder dem Mausrad ein. Grünes Feld im Balken = 90–110 % vom Soll. In den Rohren wandert das Wasser: Farbe = Temperatur (rot heiß, blau kühl), schneller = mehr l/h. Ein überversorgter Raum schickt fast heißes Wasser zurück.', 'Köpfe ab: Nur der <b>gelbe Ring am Ventil</b> bremst. Dreh mit + und −. Grün = 90 bis 110 %. Schnelle Striche im Rohr = viel Wasser.')
+      : L('<b>Weißer Knopf</b> = Thermostat (✱–5) · <b>gelber Ring</b> = Voreinstellung am Ventil (1–6, N) · Rahmen blau = zu kalt · grün = angenehm · orange = zu warm · 🔊 Ventil pfeift · Heizfläche rot = viel heißes Wasser, grau = wenig · Rohrfarbe = Wassertemperatur (rot 55 °C, violett 45 °C, blau 30 °C) · Pfeile zeigen die Richtung, schneller = mehr Wasser', '<b>Weißer Knopf</b> = Thermostat · <b>gelber Ring</b> = Ventil · Blau = zu kalt · Grün = gut · Orange = zu warm · 🔊 Ventil pfeift · rote Heizung = viel Wasser') }));
   }
 
   function dreheThermo(r, i, d) {
@@ -452,7 +464,7 @@ function hausSimulator(box, api, o) {
     var t = [[L('Heizlast', 'Heizlast'), q + ' W'], [L('Spreizung ΔT', 'Spreizung'), dt + ' K'], [L('Soll-Volumenstrom', 'Soll'), bekannt(i) ? hyZahl(e.vs) + ' l/h' : '?'],
       [aus ? L('Ist (Köpfe ab)', 'Ist (Köpfe ab)') : L('Ist im Betrieb', 'Ist'), hyZahl(e.V) + ' l/h'],
       [L('Ventilhub', 'Ventil offen'), hyZahl(e.h * 100) + ' %'], [L('Differenzdruck am Ventil', 'Druck am Ventil'), hyZahl(e.dpv) + ' mbar'],
-      [L('Raumtemperatur', 'Raum'), hyZahl(e.T, 1) + ' °C']];
+      [L('Vorlauf / Rücklauf', 'Vorlauf / Rücklauf'), e.tvl + ' / ' + hyZahl(e.trl, 0) + ' °C'], [L('Raumtemperatur', 'Raum'), hyZahl(e.T, 1) + ' °C']];
     if (r.heiz === 'fbh') t.splice(4, 0, [L('Heizkreise am Verteiler', 'Heizkreise'), String(HY.kreise(r))], [L('Durchflussmesser je Kreis', 'Anzeige je Kreis'), hyZahl(e.V / HY.kreise(r) / 60, 2) + ' l/min']);
     panel.appendChild(E('table', { class: 'hy-tab' }, t.map(function (z) { return E('tr', {}, [E('td', { text: z[0] }), E('td', { text: z[1] })]); })));
     if (o.bauen) panel.appendChild(E('button', { type: 'button', text: L('🏗️ Raum ändern', '🏗️ Raum ändern'), onclick: function () { bauenOffen = true; zeichne(); } }));
@@ -864,7 +876,7 @@ window.PAKET = {
   id: 'shk-hydraulischer-abgleich',
   titel: 'Im Gleichgewicht',
   untertitel: 'Hydraulischer Abgleich – du gleichst ein ganzes Haus ab',
-  version: '0.12',
+  version: '0.13',
   bestehen: 80,
   dauer: 'etwa 90 Minuten',
   welt: { thema: 'technik', kulisse: 'werkstatt', symbol: '🔥', farbe: '#586bac', farbeHell: '#e3e7f3' },   // Farben der Staatlichen Berufsschule Kaufbeuren
