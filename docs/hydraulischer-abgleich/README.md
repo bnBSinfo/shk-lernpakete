@@ -1,6 +1,6 @@
 ![Staatliche Berufsschule Kaufbeuren](bilder/logo-bsinfo.png)
 
-# Im Gleichgewicht – Hydraulischer Abgleich (SCORM 1.2, Version 0.14)
+# Im Gleichgewicht – Hydraulischer Abgleich (SCORM 1.2, Version 0.15)
 
 **Zielgruppe:** Anlagenmechaniker/-innen SHK · **Dauer:** ca. 60 min · **Gerät:** PC und Tablet · **Präfix:** `shk-`
 
@@ -28,6 +28,7 @@ Haus-Simulator: Ein Einfamilienhaus mit 2 Etagen × 4 Räumen. In jedem Raum las
 - Merkblatt mit Lückentext, Selbsttest (5 Fragen), Vorwissens-Check (5 Fragen), Lernheft mit den eigenen Abgleich-Protokollen.
 
 ## Änderungen
+- 0.15: Steigstrang endet in der Decke unter dem OG (kein Strang im OG, kein Dachboden).
 - 0.14: Tafelbild passt sich der Bildschirmhöhe an (Beamer 1280 × 720).
 - 0.13: Rohrfarbe nach Wassertemperatur (Vorlauf 55/35 °C, Rücklauf je Raum aus abgegebener Wärme, im Strang/Keller gemischt), einheitliche Rohrdicke, Steigstrang bis unter das Dach mit Entlüftern; Vor-/Rücklauf im Bedienfeld.
 - 0.12: Rohr aus der Decke führt in jedem Raum zum Ventil (Voreinstellring mit Thermostatkopf am Heizkörper), Rücklauf vom Heizkörper in den Boden; Rohre dicker mit Fließpfeilen, schneller; bei „Bewegung reduzieren“ langsam statt still.

@@ -331,11 +331,10 @@ function hausSimulator(box, api, o) {
     hausBox.innerHTML = '<span class="hy-wolke" style="left:8%" aria-hidden="true"></span><span class="hy-wolke" style="left:78%;top:26px" aria-hidden="true"></span>' +
       '<div class="hy-dachz" aria-hidden="true"><span class="kamin"></span><span class="flaeche"></span><span class="luke"></span></div>';
     var geb = E('div', { class: 'hy-geb' });
-    var dach = E('div', { class: 'hy-dachboden', 'aria-hidden': 'true' }, [strang(summe(erg, [4, 5, 6, 7]), null, mischung(erg, [4, 5, 6, 7])), E('span', { class: 'hy-entl', title: L('Entlüfter', 'Entlüfter') })]);
-    geb.appendChild(dach);
     [['OG', [4, 5, 6, 7]], ['EG', [0, 1, 2, 3]]].forEach(function (st, n) {
       var Vstrang = n === 0 ? summe(erg, [4, 5, 6, 7]) : erg.V, Tstrang = n === 0 ? mischung(erg, [4, 5, 6, 7]) : erg.trl;
-      var reihe = E('div', { class: 'hy-stock' }, [strang(Vstrang, st[0], Tstrang)]);
+      // Der Strang endet in der Decke unter dem OG – dort zweigen die OG-Räume ab; im OG selbst läuft er nicht weiter
+      var reihe = E('div', { class: 'hy-stock' }, [n === 0 ? E('div', { class: 'hy-strang', 'aria-hidden': 'true' }, [E('span', { class: 'hy-et', text: st[0] })]) : strang(Vstrang, st[0], Tstrang)]);
       st[1].forEach(function (i) {
         var r = haus.plaetze[i], e = erg.raeume[i];
         if (!r) {
@@ -883,7 +882,7 @@ window.PAKET = {
   id: 'shk-hydraulischer-abgleich',
   titel: 'Im Gleichgewicht',
   untertitel: 'Hydraulischer Abgleich – du gleichst ein ganzes Haus ab',
-  version: '0.14',
+  version: '0.15',
   bestehen: 80,
   dauer: 'etwa 90 Minuten',
   welt: { thema: 'technik', kulisse: 'werkstatt', symbol: '🔥', farbe: '#586bac', farbeHell: '#e3e7f3' },   // Farben der Staatlichen Berufsschule Kaufbeuren
