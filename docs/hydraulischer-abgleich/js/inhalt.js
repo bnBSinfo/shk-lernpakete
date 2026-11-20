@@ -168,8 +168,9 @@ function hausFrei() {
   '.hy-fen{position:absolute;right:8px;top:4px}.hy-hz{position:absolute;left:4px;bottom:22px;z-index:2}.hy-moebel{position:absolute;right:6px;bottom:8px;font-size:1.7rem;line-height:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,.25))}' +
   '.hy-bod{position:absolute;left:0;right:0;bottom:0;height:9px;background:repeating-linear-gradient(90deg,#c2803a 0 22px,#92400e 22px 23px),#c2803a}' +
   '.hy-bod.fliese{background:repeating-linear-gradient(90deg,#e5e7eb 0 13px,#9ca3af 13px 14px)}' +
-  '.hy-bod svg{position:absolute;inset:0;width:100%;height:100%}' +
-  '@media (max-width:560px){.hy-fen,.hy-moebel,.hy-m2,.hy-raum .hy-kl{display:none}.hy-raum{min-height:140px}.hy-szene{height:74px}.hy-hz{transform:scale(.6);transform-origin:left bottom;bottom:16px;left:2px}.hy-szene .hy-zu{left:37px;height:18px}.hy-szene .hy-ab{left:3px;height:24px}.hy-vt{left:28px;bottom:16px}.hy-vt .ring,.hy-vt .ring svg{width:26px!important;height:26px!important}.hy-raum .hy-gr{font-size:.95rem}.hy-th{left:27px;bottom:43px}.hy-th .knopf{width:28px;height:28px}.hy-th .knopf svg{width:28px;height:28px}.hy-stapel{display:none}.hy-vt .ring,.hy-vt .ring svg{width:30px;height:30px}.hy-raum .hy-rk{font-size:.7rem;padding-right:10px}.hy-stat{font-size:.6rem;padding:1px 4px}.hy-info{margin:3px 3px 0;padding:3px 4px}.hy-geb{padding:0 5px}.hy-stock{grid-template-columns:16px repeat(4,minmax(0,1fr));gap:4px}.hy-decke{grid-template-columns:16px repeat(4,minmax(0,1fr));gap:4px;margin:0 -5px;padding:0 5px}.hy-dachboden{grid-template-columns:16px 1fr;gap:4px;margin:0 -5px;padding:0 5px}.hy-entl{left:5px}.hy-keller svg{width:180px}}' +
+  '.hy-bod.fbh{height:16px;border-top:2px solid #a8a29e}' +
+  '.hy-szene .hy-fbh-ab{left:73px;bottom:9px;height:17px}.hy-szene .hy-fbh-vl{left:72px;right:8px;bottom:9px}.hy-szene .hy-fbh-rl{left:2px;right:8px;bottom:2px}.hy-szene .hy-fbh-u{right:4px;bottom:2px;height:12px}' +
+  '@media (max-width:560px){.hy-fen,.hy-moebel,.hy-m2,.hy-raum .hy-kl{display:none}.hy-raum{min-height:140px}.hy-szene{height:74px}.hy-hz{transform:scale(.6);transform-origin:left bottom;bottom:16px;left:2px}.hy-szene .hy-zu{left:37px;height:18px}.hy-szene .hy-fbh-ab{left:44px;height:9px}.hy-szene .hy-fbh-vl{left:43px;right:3px}.hy-szene .hy-fbh-rl{right:3px}.hy-szene .hy-fbh-u{right:1px}.hy-szene .hy-ab{left:3px;height:24px}.hy-vt{left:28px;bottom:16px}.hy-vt .ring,.hy-vt .ring svg{width:26px!important;height:26px!important}.hy-raum .hy-gr{font-size:.95rem}.hy-th{left:27px;bottom:43px}.hy-th .knopf{width:28px;height:28px}.hy-th .knopf svg{width:28px;height:28px}.hy-stapel{display:none}.hy-vt .ring,.hy-vt .ring svg{width:30px;height:30px}.hy-raum .hy-rk{font-size:.7rem;padding-right:10px}.hy-stat{font-size:.6rem;padding:1px 4px}.hy-info{margin:3px 3px 0;padding:3px 4px}.hy-geb{padding:0 5px}.hy-stock{grid-template-columns:16px repeat(4,minmax(0,1fr));gap:4px}.hy-decke{grid-template-columns:16px repeat(4,minmax(0,1fr));gap:4px;margin:0 -5px;padding:0 5px}.hy-dachboden{grid-template-columns:16px 1fr;gap:4px;margin:0 -5px;padding:0 5px}.hy-entl{left:5px}.hy-keller svg{width:180px}}' +
   '.hy-balken{position:relative;height:12px;border-radius:6px;background:#e5e7eb;overflow:hidden}' +
   '.hy-balken i{position:absolute;left:0;top:0;bottom:0;background:#475569}.hy-balken b{position:absolute;top:0;bottom:0;left:45%;width:10%;background:rgba(22,163,74,.45);border-left:2px solid #16a34a;border-right:2px solid #16a34a}' +
   '.hy-panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}' +
@@ -252,8 +253,8 @@ function hyHeizflaeche(r, w, kopfAb) {
 }
 function hyBoden(r, w) {
   var fliese = r.art === 'bad' || r.art === 'kueche' || r.art === 'flur';
-  var fbh = r.heiz === 'fbh' ? '<svg viewBox="0 0 120 9" preserveAspectRatio="none"><rect width="120" height="9" fill="#d6d3d1"/><path d="M2 2 H118 V7 H2" fill="none" stroke="' + hyMisch(w) + '" stroke-width="1.6"/><path d="M2 4.5 H114" fill="none" stroke="' + hyMisch(w * 0.8) + '" stroke-width="1.6"/></svg>' : '';
-  return '<span class="hy-bod' + (fliese ? ' fliese' : '') + '">' + fbh + '</span>';
+  if (r.heiz === 'fbh') return '<span class="hy-bod fbh" style="background:linear-gradient(' + hyMisch(w * 0.35) + ',#d6d3d1)"></span>';   // Estrich, wird warm
+  return '<span class="hy-bod' + (fliese ? ' fliese' : '') + '"></span>';
 }
 function hyTempFarbe(t, art) {   // Vorlauf: 55 °C rot … 35 °C orange · Rücklauf immer blau: kühl dunkelblau … warm hellblau
   var k = function (x) { return Math.max(0, Math.min(1, x)); };
@@ -369,6 +370,11 @@ function hausSimulator(box, api, o) {
         szene.innerHTML = '<span aria-hidden="true">' + hyFenster() + hyHeizflaeche(r, waerme, modus === 'messung') + hyBoden(r, waerme) + '</span>';
         var zu = rohr('vl', 'v', e.V, {}, e.tvl, 6); zu.classList.add('hy-zu'); szene.appendChild(zu);
         if (r.heiz !== 'fbh') { var ab = rohr('rl', 'v', e.V, {}, e.trl, 6); ab.classList.add('hy-ab'); szene.appendChild(ab); }
+        else [['vl', 'v', e.tvl, 'hy-fbh-ab'], ['vl', 'h', e.tvl, 'hy-fbh-vl'], ['vl', 'v', (e.tvl + e.trl) / 2, 'hy-fbh-u'], ['rl', 'h', e.trl, 'hy-fbh-rl']].forEach(function (x) {   // Ventil → Heizschlange im Estrich → zurück in die Decke
+          var t = rohr(x[0], x[1], e.V, {}, x[2], 5); t.classList.add(x[3]);
+          if (x[1] === 'v') t.classList.replace('vl', 'rl');   // fließt nach unten: Pfeile und Bewegung abwärts, Farbe bleibt Vorlauf
+          szene.appendChild(t);
+        });
         szene.appendChild(thermostatImRaum(r, i, modus === 'messung'));
         szene.appendChild(ventilImRaum(r, i, modus === 'messung'));
         kn.appendChild(szene);
@@ -884,7 +890,7 @@ window.PAKET = {
   id: 'shk-hydraulischer-abgleich',
   titel: 'Im Gleichgewicht',
   untertitel: 'Hydraulischer Abgleich – du gleichst ein ganzes Haus ab',
-  version: '0.16',
+  version: '0.17',
   bestehen: 80,
   dauer: 'etwa 90 Minuten',
   welt: { thema: 'technik', kulisse: 'werkstatt', symbol: '🔥', farbe: '#586bac', farbeHell: '#e3e7f3' },   // Farben der Staatlichen Berufsschule Kaufbeuren
