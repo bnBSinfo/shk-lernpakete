@@ -173,6 +173,9 @@ function hausFrei() {
   '.hy-prot{background:var(--card);border:2px solid var(--line);border-radius:12px;padding:10px 12px;overflow-x:auto}.hy-prot table{width:100%;border-collapse:collapse;font-size:.85rem}.hy-prot th,.hy-prot td{padding:3px 5px;border-bottom:1px solid var(--line);text-align:right}.hy-prot th:first-child,.hy-prot td:first-child{text-align:left}' +
   '.hy-prot .hy-ja{color:var(--ok);font-weight:700}.hy-prot .hy-nein{color:var(--bad);font-weight:700}' +
   '.hy-soll input{width:6em;min-height:40px;font:inherit}' +
+  '.hy-tafel{width:100%;max-width:1150px;margin:auto;padding:0}.hy-tafel .hy-leiste,.hy-tafel .hy-panel,.hy-tafel .hy-legende{display:none}.hy-tafel .hy-main{grid-template-columns:1fr}' +
+  '.hy-tafel .hy-raum{min-height:205px}.hy-tafel .hy-raum .hy-gr{font-size:2rem}.hy-tafel .hy-raum .hy-rk{font-size:1rem}.hy-tafel .hy-raum .hy-kl{font-size:.85rem}.hy-tafel .hy-stat{font-size:.85rem}.hy-tafel .hy-keller .hy-ger{font-size:1.15rem}' +
+  '.hy-bilanz{width:100%;max-width:1100px;margin:auto;border-collapse:collapse;font-size:1.6rem;background:var(--card)}.hy-bilanz th,.hy-bilanz td{border:2px solid var(--line);padding:14px 18px;text-align:center}.hy-bilanz th:first-child,.hy-bilanz td:first-child{text-align:left}.hy-bilanz td.zu{color:var(--muted)}.hy-bilanz .gut{color:var(--ok);font-weight:800}.hy-bilanz .schlecht{color:var(--bad);font-weight:800}' +
   '.hy-legende{font-size:.78rem;color:var(--ink-soft);margin-top:4px}';
   var s = document.createElement('style'); s.textContent = css; document.head.appendChild(s);
 })();
@@ -260,6 +263,7 @@ function hausSimulator(box, api, o) {
   var wurzel = E('div', { class: 'hy' }), hinweis = E('div', { class: 'hy-hinweis', 'aria-live': 'polite' }), leiste = E('div', { class: 'hy-leiste' }),
     main = E('div', { class: 'hy-main' }), hausBox = E('div', { class: 'hy-haus' }), panel = E('div', { class: 'hy-panel', 'aria-live': 'polite' }),
     meldung = E('div', { class: 'hy-meldung', 'aria-live': 'polite' }), prot = E('div', { class: 'hy-prot', hidden: true });
+  if (o.tafel) wurzel.classList.add('hy-tafel');
   if (o.kopf) wurzel.appendChild(o.kopf);
   if (!o.stumm) wurzel.appendChild(hinweis);
   wurzel.appendChild(leiste);
@@ -339,7 +343,7 @@ function hausSimulator(box, api, o) {
     var innen = E('div', { class: 'innen' });
     innen.innerHTML = hyKellerSvg(haus.pumpe, erg.V);
     innen.appendChild(E('span', { class: 'hy-ger', text: '🔥 ' + L('Kessel, Vorlauf 55 °C', 'Kessel 55 °C') }));
-    innen.appendChild(E('span', { class: 'hy-ger', text: '⚙️ ' + L('Pumpe ', 'Pumpe ') + hyZahl(haus.pumpe, 1) + ' m · ' + hyZahl(erg.V) + ' l/h' }));
+    innen.appendChild(E('span', { class: 'hy-ger', text: '⚙️ ' + L('Pumpe ', 'Pumpe ') + hyZahl(haus.pumpe, 1) + ' m · ' + hyZahl(erg.V) + ' l/h · ≈ ' + erg.watt + ' W' }));
     keller.appendChild(innen);
     hausBox.appendChild(E('div', { class: 'hy-erde' }, [keller]));
     hausBox.appendChild(E('div', { class: 'hy-legende', html: modus === 'messung'
@@ -745,12 +749,91 @@ function nachweisBerger(box) {
   };
 }
 
+
+/* ---------- Tafelbild: Input der Lehrkraft (Vorhersagen → Klicken → Deuten) ---------- */
+function tafelHaus(buehne, hausFn, opt) {   // baut die Simulation groß und ohne Bedienleiste; liefert Neuzeichnen
+  var haus = hausFn(), zustand = { modus: opt.modus || 'betrieb', profi: !!opt.profi }, sim;
+  function bau() { buehne.innerHTML = ''; sim = hausSimulator(buehne, null, { haus: haus, stumm: true, tafel: true, profi: zustand.profi }); sim.modus(zustand.modus); }
+  bau();
+  return { haus: haus, zustand: zustand, neu: bau, sim: function () { return sim; } };
+}
+function tafelBilanz() {
+  var a = hausYilmaz(), b = hausYilmaz(), c = HY.automatik(hausYilmaz()); b.pumpe = 5;
+  return [['ohne', L('Ohne Abgleich · 2 m', 'Ohne Abgleich · 2 m'), a], ['hoch', L('Nur Pumpe hoch · 5 m', 'Nur Pumpe hoch · 5 m'), b], ['abg', L('Abgeglichen · ' + hyZahl(c.pumpe, 1) + ' m', 'Abgeglichen · ' + hyZahl(c.pumpe, 1) + ' m'), c]].map(function (z) {
+    var m = HY.rechne(z[2], true), bt = HY.rechne(z[2], false), xs = m.raeume.map(function (r) { return r.x * 100; });
+    return { id: z[0], titel: z[1], can: bt.raeume[7].T, min: Math.min.apply(null, xs), max: Math.max.apply(null, xs), watt: m.watt };
+  });
+}
+var TAFEL = {
+  titel: 'Hydraulischer Abgleich – Einweisung',
+  dauer: '20 Minuten',
+  szenen: [
+    { id: 'kalt', titel: 'Das kalte Kinderzimmer', station: 'S1',
+      erklaerung: '<p>Im Kinderzimmer Can ist es zu kalt. Das Ventil ist schon <b>ganz offen</b> (Hub 100 %).</p><p>Aufdrehen am Thermostat bringt deshalb kein zusätzliches Wasser – der Raum ist <b>unterversorgt</b>.</p>',
+      zeichne: function (buehne, api) {
+        var t = tafelHaus(buehne, hausYilmaz, {});
+        api.werkzeug({ icon: '🌡️', text: L('Can auf 5', 'Can auf 5'), taste: 't', typ: 'schalter', aktion: function (an) { t.haus.plaetze[7].thermo = an ? 5 : 3; t.neu(); } });
+        return {};
+      } },
+    { id: 'messung', titel: 'Köpfe ab', station: 'S1',
+      erklaerung: '<p>Für den Abgleich werden die Thermostatköpfe <b>abgenommen</b>. Dann bremst nur noch die Voreinstellung.</p><p>Die nahen Räume bekommen viel mehr Wasser als nötig, die fernen zu wenig: Das Wasser nimmt den Weg mit dem kleinsten Widerstand.</p>',
+      zeichne: function (buehne, api) {
+        var t = tafelHaus(buehne, hausYilmaz, { profi: true });
+        api.werkzeug({ icon: '🔧', text: L('Köpfe ab', 'Köpfe ab'), taste: 'k', typ: 'schalter', aktion: function (an) { t.zustand.modus = an ? 'messung' : 'betrieb'; t.neu(); } });
+        api.werkzeug({ icon: '%', text: L('Soll aufdecken', 'Soll zeigen'), taste: 's', typ: 'schalter', aktion: function (an) { t.zustand.profi = !an; t.neu(); } });
+        return {};
+      } },
+    { id: 'pumpe', titel: 'Pumpe höher?', station: 'S2',
+      erklaerung: '<p>Mehr Förderhöhe drückt mehr Wasser durch <b>alle</b> Räume. Die fernen Räume bekommen genug – die nahen aber noch mehr.</p><p>Ohne Abgleich verschiebt die Pumpe das Problem nur und braucht mehr Strom.</p>',
+      zeichne: function (buehne, api) {
+        var t = tafelHaus(buehne, hausYilmaz, { modus: 'messung' });
+        api.werkzeug({ icon: '➖', text: L('Pumpe −0,5 m', 'Pumpe kleiner'), taste: 'n', aktion: function () { t.haus.pumpe = Math.max(1, t.haus.pumpe - 0.5); t.neu(); } });
+        api.werkzeug({ icon: '➕', text: L('Pumpe +0,5 m', 'Pumpe größer'), taste: 'm', aktion: function () { t.haus.pumpe = Math.min(6, t.haus.pumpe + 0.5); t.neu(); } });
+        return {};
+      } },
+    { id: 'abgleich', titel: 'Voreinstellen', station: 'S1',
+      erklaerung: '<p>Mit der <b>Voreinstellung</b> bekommt jeder Raum einen eigenen Widerstand: nahe Räume werden gedrosselt, der ferne Raum bleibt auf N.</p><p>Danach erhält jeder Raum 90–110 % seines Soll-Volumenstroms.</p>',
+      zeichne: function (buehne, api) {
+        var auto = HY.automatik(hausYilmaz());
+        var t = tafelHaus(buehne, function () { var h = hausYilmaz(); h.pumpe = auto.pumpe; return h; }, { modus: 'messung' });
+        api.werkzeug({ icon: '🔩', text: L('Voreinstellungen setzen', 'Ventile einstellen'), taste: 'v', typ: 'schalter', aktion: function (an) { t.haus.plaetze.forEach(function (r, i) { r.vor = an ? auto.plaetze[i].vor : 7; }); t.neu(); } });
+        api.werkzeug({ icon: '🌡️', text: L('Betrieb', 'Heizen'), taste: 'b', typ: 'schalter', aktion: function (an) { t.zustand.modus = an ? 'betrieb' : 'messung'; t.neu(); } });
+        return {};
+      } },
+    { id: 'fbh', titel: 'Fußbodenheizung', station: 'S3',
+      erklaerung: '<p>Die Fußbodenheizung arbeitet mit 35/30 °C, also nur <b>5 K Spreizung</b>. Für dieselbe Heizlast braucht sie doppelt so viel Wasser wie ein Heizkörper mit 10 K.</p><p>Eingestellt und abgelesen wird am <b>Heizkreisverteiler</b>, in l/min je Kreis.</p>',
+      zeichne: function (buehne, api) {
+        var t = tafelHaus(buehne, function () { return HY.automatik(hausOkafor()); }, { modus: 'messung', profi: true });
+        api.werkzeug({ icon: '%', text: L('Soll aufdecken', 'Soll zeigen'), taste: 's', typ: 'schalter', aktion: function (an) { t.zustand.profi = !an; t.neu(); } });
+        return {};
+      } },
+    { id: 'bilanz', titel: 'Bilanz', station: 'S2',
+      erklaerung: '<p>Nur die Pumpe hochdrehen macht das Kinderzimmer warm, überversorgt aber alle anderen Räume und kostet Strom.</p><p>Erst der <b>Abgleich</b> mit passender Förderhöhe bringt alle Räume auf ihr Soll – mit weniger Pumpenleistung als „Pumpe hoch“.</p>',
+      zeichne: function (buehne, api) {
+        var d = tafelBilanz(), tab = KIT.el('table', { class: 'hy-bilanz' }), offen = {};
+        buehne.appendChild(tab);
+        function zelle(z, html, klasse) { return offen[z.id] ? '<td class="' + (klasse || '') + '">' + html + '</td>' : '<td class="zu">?</td>'; }
+        function zeig() {
+          tab.innerHTML = '<thead><tr><th></th>' + d.map(function (z) { return '<th>' + z.titel + '</th>'; }).join('') + '</tr></thead><tbody>' +
+            '<tr><td>🧸 Kinderzimmer Can</td>' + d.map(function (z) { return zelle(z, hyZahl(z.can, 1) + ' °C', z.can < 19.4 ? 'schlecht' : 'gut'); }).join('') + '</tr>' +
+            '<tr><td>💧 ' + L('Versorgung der Räume', 'Wasser in den Räumen') + '</td>' + d.map(function (z) { return zelle(z, hyZahl(z.min) + '–' + hyZahl(z.max) + ' %', z.min >= 90 && z.max <= 110 ? 'gut' : 'schlecht'); }).join('') + '</tr>' +
+            '<tr><td>⚡ ' + L('Pumpe', 'Pumpe') + '</td>' + d.map(function (z) { return zelle(z, '≈ ' + z.watt + ' W'); }).join('') + '</tr></tbody>';
+        }
+        zeig();
+        [['ohne', '1️⃣', 'u'], ['hoch', '2️⃣', 'h'], ['abg', '3️⃣', 'g']].forEach(function (w, j) {
+          api.werkzeug({ icon: w[1], text: d[j].titel, taste: w[2], typ: 'schalter', aktion: function (an) { offen[w[0]] = an; zeig(); } });
+        });
+        return {};
+      } }
+  ]
+};
+
 /* ===================================================================== */
 window.PAKET = {
   id: 'shk-hydraulischer-abgleich',
   titel: 'Im Gleichgewicht',
   untertitel: 'Hydraulischer Abgleich – du gleichst ein ganzes Haus ab',
-  version: '0.7',
+  version: '0.8',
   bestehen: 80,
   dauer: 'etwa 90 Minuten',
   welt: { thema: 'technik', kulisse: 'werkstatt', symbol: '🔥', farbe: '#586bac', farbeHell: '#e3e7f3' },   // Farben der Staatlichen Berufsschule Kaufbeuren
@@ -823,6 +906,7 @@ window.PAKET = {
     ], fehler: 'l/min und l/h verwechseln: 1 l/min = 60 l/h.', beispiel: '270 l/h auf 3 Kreise = 90 l/h je Kreis = 1,5 l/min.' }
   ],
   selbsttest: ['N4', 'N6', 'N11', 'N14', 'N20'],
+  tafel: TAFEL,
   vorwissen: ['N1', 'N5', 'N10', 'N16', 'N18'],
 
   lernziele: [

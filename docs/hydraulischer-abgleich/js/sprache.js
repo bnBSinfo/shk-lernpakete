@@ -56,6 +56,14 @@
         tipps: ['Der Raum mit dem weitesten Weg ist das Büro oben hinten. Stell es auf N.', 'Dreh die Pumpe runter bis 3,5 m. Dann die anderen Räume bremsen.', 'Etwa: Wartezimmer 4¾, Empfang 4¼, WC 2½, Behandlung 1: 4¾, Behandlung 2: 5, Labor 4½, Büro N.'],
         reflexion: { frage: '<b>Erkläre</b>: Warum reichen jetzt 3,5 m statt 5 m?' + window.SATZ(['Vorher bekamen die nahen Räume …', 'Jetzt muss die Pumpe nur …'], true), muster: 'Vorher bekamen die nahen Räume viel zu viel. Jetzt fließt nur so viel wie nötig. Die Pumpe muss nur den Raum hinten schaffen.' } }
     },
+    tafel: { szenen: {
+      kalt: { titel: 'Das kalte Kinderzimmer', erklaerung: '<p>Bei Can ist es zu kalt. Das Ventil ist schon <b>ganz offen</b>.</p><p>Aufdrehen bringt kein Wasser mehr. Der Raum ist <b>unterversorgt</b>.</p>' },
+      messung: { titel: 'Köpfe ab', erklaerung: '<p>Man nimmt die Thermostatköpfe <b>ab</b>. Dann bremst nur die Voreinstellung.</p><p>Nahe Räume bekommen zu viel Wasser. Ferne Räume zu wenig.</p>' },
+      pumpe: { titel: 'Pumpe höher?', erklaerung: '<p>Mehr Druck: mehr Wasser in <b>allen</b> Räumen.</p><p>Die nahen Räume bekommen noch mehr. Das kostet Strom.</p>' },
+      abgleich: { titel: 'Voreinstellen', erklaerung: '<p>Die <b>Voreinstellung</b> bremst nahe Räume. Der Raum hinten bleibt auf N.</p><p>Dann bekommt jeder Raum 90 bis 110 %.</p>' },
+      fbh: { titel: 'Fußbodenheizung', erklaerung: '<p>Die FBH hat nur <b>5 K</b>. Sie braucht doppelt so viel Wasser.</p><p>Man stellt sie am <b>Verteiler</b> ein. Anzeige in l/min.</p>' },
+      bilanz: { titel: 'Bilanz', erklaerung: '<p>Nur Pumpe hoch: Can wird warm. Aber alle anderen bekommen zu viel. Das kostet Strom.</p><p>Mit <b>Abgleich</b>: Alle Räume passen. Die Pumpe braucht weniger.</p>' }
+    } },
     nachweis: { einleitung: 'Heute fährst du <b>allein</b> zu Familie Berger. Der Kessel ist neu. Niemand hat abgeglichen. Die Pumpe steht auf 4,5 m. Es gibt keine Hinweise.',
       teilA: { titel: 'Haus Berger abgleichen', auftrag: '1. <b>Gleiche</b> alle Räume auf 90 bis 110 % ab. 2. <b>Stelle</b> die Pumpe so klein wie möglich ein. 3. <b>Gib</b> Teil A ab.' } },
     merkblatt: {
