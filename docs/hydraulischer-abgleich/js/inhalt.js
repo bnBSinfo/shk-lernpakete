@@ -119,11 +119,17 @@ function hausFrei() {
   '.hy-dachz .luke{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);width:30px;height:24px;border-radius:15px 15px 2px 2px;background:linear-gradient(135deg,#e0f2fe,#7dd3fc);border:3px solid #fff;box-shadow:0 0 0 2px #78350f}' +
   '.hy-geb{background:repeating-linear-gradient(45deg,#a8a29e 0 2px,#e7e5e4 2px 7px);padding:0 10px;border-left:2px solid #57534e;border-right:2px solid #57534e}' +
   '.hy-stock{display:grid;grid-template-columns:22px repeat(4,minmax(0,1fr));gap:6px;padding:6px 0}' +
-  '.hy-strang{position:relative;background:linear-gradient(90deg,transparent 3px,#dc2626 3px 8px,transparent 8px 12px,#2563eb 12px 17px,transparent 17px)}' +
+  '.hy-strang{position:relative}' +
   '.hy-strang .hy-et{position:absolute;top:2px;left:-6px;right:-6px;text-align:center;font-size:.68rem;font-weight:800;background:#fff;border:1px solid #57534e;border-radius:6px;color:#44403c}' +
-  '.hy-decke{display:grid;grid-template-columns:22px 1fr;gap:6px;height:16px;margin:0 -10px;padding:0 10px;background:radial-gradient(#6b7280 1px,transparent 1.5px) 0 0/6px 6px,#9ca3af;border-top:1px solid #4b5563;border-bottom:1px solid #4b5563}' +
-  '.hy-decke span:first-child{background:linear-gradient(90deg,transparent 3px,#dc2626 3px 8px,transparent 8px 12px,#2563eb 12px 17px,transparent 17px)}' +
-  '.hy-decke span:last-child{background:linear-gradient(transparent 3px,#dc2626 3px 7px,transparent 7px 9px,#2563eb 9px 13px,transparent 13px)}' +
+  '.hy-decke{display:grid;grid-template-columns:22px repeat(4,minmax(0,1fr));gap:6px;height:16px;margin:0 -10px;padding:0 10px;background:radial-gradient(#6b7280 1px,transparent 1.5px) 0 0/6px 6px,#9ca3af;border-top:1px solid #4b5563;border-bottom:1px solid #4b5563}' +
+  '.hy-decke > div{position:relative}' +
+  '.hy-rohr{position:absolute;border-radius:3px;animation-duration:var(--d,2s);animation-timing-function:linear;animation-iteration-count:infinite}' +
+  '.hy-rohr.vl.h{background:linear-gradient(90deg,#dc2626 0 9px,#fca5a5 9px 16px) 0 0/16px 100%;animation-name:hy-r}.hy-rohr.rl.h{background:linear-gradient(90deg,#2563eb 0 9px,#93c5fd 9px 16px) 0 0/16px 100%;animation-name:hy-l}' +
+  '.hy-rohr.vl.v{background:linear-gradient(0deg,#dc2626 0 9px,#fca5a5 9px 16px) 0 0/100% 16px;animation-name:hy-o}.hy-rohr.rl.v{background:linear-gradient(0deg,#2563eb 0 9px,#93c5fd 9px 16px) 0 0/100% 16px;animation-name:hy-u}' +
+  '.hy-rohr.still{animation:none;opacity:.35}' +
+  '@keyframes hy-r{to{background-position:16px 0}}@keyframes hy-l{to{background-position:-16px 0}}@keyframes hy-o{to{background-position:0 -16px}}@keyframes hy-u{to{background-position:0 16px}}' +
+  '.hy-svgfl{stroke-dasharray:9 7;animation:hy-dl var(--d,2s) linear infinite}.hy-svgfl.rl{animation-name:hy-dr}@keyframes hy-dl{to{stroke-dashoffset:16}}@keyframes hy-dr{to{stroke-dashoffset:-16}}' +
+  '@media (prefers-reduced-motion:reduce){.hy-rohr,.hy-svgfl{animation:none}}' +
   '.hy-gras{height:10px;margin:0 -12px;background:linear-gradient(#84cc16,#4d7c0f);position:relative;z-index:1}' +
   '.hy-erde{margin:0 -12px;padding:0 22px 12px;background:radial-gradient(#78350f 1.5px,transparent 2px) 0 0/9px 9px,radial-gradient(#b45309 1px,transparent 1.5px) 4px 5px/11px 11px,#a16207}' +
   '.hy-keller{display:grid;grid-template-columns:22px auto 1fr;gap:6px;align-items:end;padding:0 10px 10px;background:repeating-linear-gradient(45deg,#78716c 0 2px,#d6d3d1 2px 7px);border:2px solid #44403c;border-top:none}' +
@@ -159,7 +165,7 @@ function hausFrei() {
   '.hy-bod{position:absolute;left:0;right:0;bottom:0;height:9px;background:repeating-linear-gradient(90deg,#c2803a 0 22px,#92400e 22px 23px),#c2803a}' +
   '.hy-bod.fliese{background:repeating-linear-gradient(90deg,#e5e7eb 0 13px,#9ca3af 13px 14px)}' +
   '.hy-bod svg{position:absolute;inset:0;width:100%;height:100%}' +
-  '@media (max-width:560px){.hy-fen,.hy-moebel,.hy-m2,.hy-raum .hy-kl{display:none}.hy-raum{min-height:132px}.hy-szene{height:48px}.hy-hz{transform:scale(.8);transform-origin:left bottom}.hy-raum .hy-gr{font-size:.95rem}.hy-th{left:2px;bottom:10px}.hy-th.wand{left:50%}.hy-th .knopf{width:34px;height:34px}.hy-th .knopf svg{width:34px;height:34px}.hy-stapel{display:none}.hy-th{left:2px}.hy-vt{right:2px}.hy-vt .ring,.hy-vt .ring svg{width:30px;height:30px}.hy-raum .hy-rk{font-size:.7rem;padding-right:10px}.hy-stat{font-size:.6rem;padding:1px 4px}.hy-info{margin:3px 3px 0;padding:3px 4px}.hy-geb{padding:0 5px}.hy-stock{grid-template-columns:16px repeat(4,minmax(0,1fr));gap:4px}.hy-decke{grid-template-columns:16px 1fr;gap:4px;margin:0 -5px;padding:0 5px}.hy-keller svg{width:180px}}' +
+  '@media (max-width:560px){.hy-fen,.hy-moebel,.hy-m2,.hy-raum .hy-kl{display:none}.hy-raum{min-height:132px}.hy-szene{height:48px}.hy-hz{transform:scale(.8);transform-origin:left bottom}.hy-raum .hy-gr{font-size:.95rem}.hy-th{left:2px;bottom:10px}.hy-th.wand{left:50%}.hy-th .knopf{width:34px;height:34px}.hy-th .knopf svg{width:34px;height:34px}.hy-stapel{display:none}.hy-th{left:2px}.hy-vt{right:2px}.hy-vt .ring,.hy-vt .ring svg{width:30px;height:30px}.hy-raum .hy-rk{font-size:.7rem;padding-right:10px}.hy-stat{font-size:.6rem;padding:1px 4px}.hy-info{margin:3px 3px 0;padding:3px 4px}.hy-geb{padding:0 5px}.hy-stock{grid-template-columns:16px repeat(4,minmax(0,1fr));gap:4px}.hy-decke{grid-template-columns:16px repeat(4,minmax(0,1fr));gap:4px;margin:0 -5px;padding:0 5px}.hy-keller svg{width:180px}}' +
   '.hy-balken{position:relative;height:12px;border-radius:6px;background:#e5e7eb;overflow:hidden}' +
   '.hy-balken i{position:absolute;left:0;top:0;bottom:0;background:#475569}.hy-balken b{position:absolute;top:0;bottom:0;left:45%;width:10%;background:rgba(22,163,74,.45);border-left:2px solid #16a34a;border-right:2px solid #16a34a}' +
   '.hy-panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}' +
@@ -245,9 +251,10 @@ function hyBoden(r, w) {
   var fbh = r.heiz === 'fbh' ? '<svg viewBox="0 0 120 9" preserveAspectRatio="none"><rect width="120" height="9" fill="#d6d3d1"/><path d="M2 2 H118 V7 H2" fill="none" stroke="' + hyMisch(w) + '" stroke-width="1.6"/><path d="M2 4.5 H114" fill="none" stroke="' + hyMisch(w * 0.8) + '" stroke-width="1.6"/></svg>' : '';
   return '<span class="hy-bod' + (fliese ? ' fliese' : '') + '">' + fbh + '</span>';
 }
-function hyKellerSvg(pumpe, V) {
+function hyKellerSvg(pumpe, V, d) {
   return '<svg viewBox="0 0 250 92" role="img" aria-label="Heizraum mit Kessel, Pumpe und Ausdehnungsgefäß">' +
     '<path d="M0 22 H150" stroke="#dc2626" stroke-width="5"/><path d="M0 34 H130 V70" stroke="#2563eb" stroke-width="5" fill="none"/><path d="M150 22 V30" stroke="#dc2626" stroke-width="5"/>' +
+    (V > 0.5 ? '<path class="hy-svgfl" style="--d:' + d + '" d="M150 30 V22 H0" stroke="#fca5a5" stroke-width="2.5" fill="none"/><path class="hy-svgfl rl" style="--d:' + d + '" d="M0 34 H130 V70" stroke="#93c5fd" stroke-width="2.5" fill="none"/>' : '') +
     '<circle cx="60" cy="22" r="11" fill="#1f2937"/><circle cx="60" cy="22" r="7" fill="#22c55e"/><path d="M55 22 h8 l-3 -3 M63 22 l-3 3" stroke="#fff" stroke-width="1.6" fill="none"/>' +
     '<text x="60" y="49" font-size="9" text-anchor="middle" fill="#1f2937" font-weight="700">' + L('Pumpe', 'Pumpe') + ' ' + hyZahl(pumpe, 1) + ' m</text>' +
     '<rect x="96" y="40" width="18" height="34" rx="9" fill="#dc2626"/><path d="M105 40 v-6" stroke="#2563eb" stroke-width="3"/><text x="105" y="86" font-size="8" text-anchor="middle" fill="#1f2937">MAG</text>' +
@@ -293,12 +300,30 @@ function hausSimulator(box, api, o) {
     if (modus === 'messung') return !bekannt(i) ? '' : e.x < 0.9 ? 'hy-zuwenig' : e.x > 1.1 ? 'hy-zuviel' : 'hy-gut';
     return e.T < e.Td - 0.6 ? 'hy-kalt' : e.T > e.Td + 0.8 ? 'hy-warm' : 'hy-gut';
   }
+  function dauer(V) { return V > 0.5 ? Math.max(0.25, Math.min(8, 120 / V)).toFixed(2) + 's' : '0s'; }
+  function dicke(V) { return Math.round(Math.max(3, Math.min(7, 2 + V / 60))); }
+  function rohr(art, richtung, V, pos) {   // fließendes Wasser: Tempo und Dicke nach Volumenstrom
+    var st = {};
+    Object.keys(pos).forEach(function (k) { st[k] = pos[k]; });
+    if (richtung === 'h') st.height = dicke(V) + 'px'; else st.width = dicke(V) + 'px';
+    var r = E('span', { class: 'hy-rohr ' + art + ' ' + richtung + (V > 0.5 ? '' : ' still'), style: st });
+    r.style.setProperty('--d', dauer(V));
+    return r;
+  }
+  function strang(V, label) {
+    var d = E('div', { class: 'hy-strang', 'aria-hidden': 'true' }, [rohr('vl', 'v', V, { left: '2px', top: 0, bottom: 0 }), rohr('rl', 'v', V, { left: '12px', top: 0, bottom: 0 })]);
+    if (label) d.appendChild(E('span', { class: 'hy-et', text: label }));
+    return d;
+  }
+  function summe(erg, plaetze) { return plaetze.reduce(function (s, i) { return s + (erg.raeume[i] ? erg.raeume[i].V : 0); }, 0); }
+
   function zeichneHaus(erg) {
     hausBox.innerHTML = '<span class="hy-wolke" style="left:8%" aria-hidden="true"></span><span class="hy-wolke" style="left:78%;top:26px" aria-hidden="true"></span>' +
       '<div class="hy-dachz" aria-hidden="true"><span class="kamin"></span><span class="flaeche"></span><span class="luke"></span></div>';
     var geb = E('div', { class: 'hy-geb' });
     [['OG', [4, 5, 6, 7]], ['EG', [0, 1, 2, 3]]].forEach(function (st, n) {
-      var reihe = E('div', { class: 'hy-stock' }, [E('div', { class: 'hy-strang', 'aria-hidden': 'true' }, [E('span', { class: 'hy-et', text: st[0] })])]);
+      var Vstrang = n === 0 ? summe(erg, [4, 5, 6, 7]) : erg.V;
+      var reihe = E('div', { class: 'hy-stock' }, [strang(Vstrang, st[0])]);
       st[1].forEach(function (i) {
         var r = haus.plaetze[i], e = erg.raeume[i];
         if (!r) {
@@ -335,20 +360,24 @@ function hausSimulator(box, api, o) {
         reihe.appendChild(kn);
       });
       geb.appendChild(reihe);
-      geb.appendChild(E('div', { class: 'hy-decke', 'aria-hidden': 'true' }, [E('span'), E('span')]));
+      geb.appendChild(E('div', { class: 'hy-decke', 'aria-hidden': 'true' }, [strang(Vstrang)].concat(st[1].map(function (i) {
+        var V = erg.raeume[i] ? erg.raeume[i].V : 0, seg = E('div');
+        if (haus.plaetze[i]) { seg.appendChild(rohr('vl', 'h', V, { left: '-6px', right: 0, top: '2px' })); seg.appendChild(rohr('rl', 'h', V, { left: '-6px', right: 0, bottom: '2px' })); }
+        return seg;
+      }))));
     });
     hausBox.appendChild(geb);
     hausBox.appendChild(E('div', { class: 'hy-gras', 'aria-hidden': 'true' }));
-    var keller = E('div', { class: 'hy-keller' }, [E('div', { class: 'hy-strang', 'aria-hidden': 'true' }, [E('span', { class: 'hy-et', text: 'KG' })])]);
+    var keller = E('div', { class: 'hy-keller' }, [strang(erg.V, 'KG')]);
     var innen = E('div', { class: 'innen' });
-    innen.innerHTML = hyKellerSvg(haus.pumpe, erg.V);
+    innen.innerHTML = hyKellerSvg(haus.pumpe, erg.V, dauer(erg.V));
     innen.appendChild(E('span', { class: 'hy-ger', text: '🔥 ' + L('Kessel, Vorlauf 55 °C', 'Kessel 55 °C') }));
     innen.appendChild(E('span', { class: 'hy-ger', text: '⚙️ ' + L('Pumpe ', 'Pumpe ') + hyZahl(haus.pumpe, 1) + ' m · ' + hyZahl(erg.V) + ' l/h · ≈ ' + erg.watt + ' W' }));
     keller.appendChild(innen);
     hausBox.appendChild(E('div', { class: 'hy-erde' }, [keller]));
     hausBox.appendChild(E('div', { class: 'hy-legende', html: modus === 'messung'
-      ? L('Messung mit abgenommenen Thermostatköpfen: Nur die Voreinstellung bremst – stell sie am <b>gelben Ring am Ventil</b> (1–6, N; bei FBH violett = Verteiler) mit + und − oder dem Mausrad ein. Grünes Feld im Balken = 90–110 % vom Soll.', 'Köpfe ab: Nur der <b>gelbe Ring am Ventil</b> bremst. Dreh mit + und −. Grün = 90 bis 110 %.')
-      : L('<b>Weißer Knopf</b> = Thermostat (✱–5) · <b>gelber Ring</b> = Voreinstellung am Ventil (1–6, N) · Rahmen blau = zu kalt · grün = angenehm · orange = zu warm · 🔊 Ventil pfeift · Heizfläche rot = viel heißes Wasser, grau = wenig · rot/blau = Vor- und Rücklauf', '<b>Weißer Knopf</b> = Thermostat · <b>gelber Ring</b> = Ventil · Blau = zu kalt · Grün = gut · Orange = zu warm · 🔊 Ventil pfeift · rote Heizung = viel Wasser') }));
+      ? L('Messung mit abgenommenen Thermostatköpfen: Nur die Voreinstellung bremst – stell sie am <b>gelben Ring am Ventil</b> (1–6, N; bei FBH violett = Verteiler) mit + und − oder dem Mausrad ein. Grünes Feld im Balken = 90–110 % vom Soll. In den Rohren wandert das Wasser: rot Vorlauf, blau Rücklauf – je schneller und dicker, desto mehr l/h.', 'Köpfe ab: Nur der <b>gelbe Ring am Ventil</b> bremst. Dreh mit + und −. Grün = 90 bis 110 %. Schnelle Striche im Rohr = viel Wasser.')
+      : L('<b>Weißer Knopf</b> = Thermostat (✱–5) · <b>gelber Ring</b> = Voreinstellung am Ventil (1–6, N) · Rahmen blau = zu kalt · grün = angenehm · orange = zu warm · 🔊 Ventil pfeift · Heizfläche rot = viel heißes Wasser, grau = wenig · Rohre: rot Vorlauf, blau Rücklauf – je schneller die Striche, desto mehr Wasser', '<b>Weißer Knopf</b> = Thermostat · <b>gelber Ring</b> = Ventil · Blau = zu kalt · Grün = gut · Orange = zu warm · 🔊 Ventil pfeift · rote Heizung = viel Wasser') }));
   }
 
   function dreheThermo(r, i, d) {
@@ -833,7 +862,7 @@ window.PAKET = {
   id: 'shk-hydraulischer-abgleich',
   titel: 'Im Gleichgewicht',
   untertitel: 'Hydraulischer Abgleich – du gleichst ein ganzes Haus ab',
-  version: '0.9',
+  version: '0.10',
   bestehen: 80,
   dauer: 'etwa 90 Minuten',
   welt: { thema: 'technik', kulisse: 'werkstatt', symbol: '🔥', farbe: '#586bac', farbeHell: '#e3e7f3' },   // Farben der Staatlichen Berufsschule Kaufbeuren
